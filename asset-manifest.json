@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/sos-dashboard/static/css/main.e62c1386.chunk.css",
-    "main.js": "/sos-dashboard/static/js/main.761b0ec1.chunk.js",
-    "main.js.map": "/sos-dashboard/static/js/main.761b0ec1.chunk.js.map",
+    "main.js": "/sos-dashboard/static/js/main.82c69021.chunk.js",
+    "main.js.map": "/sos-dashboard/static/js/main.82c69021.chunk.js.map",
     "runtime-main.js": "/sos-dashboard/static/js/runtime-main.e6712657.js",
     "runtime-main.js.map": "/sos-dashboard/static/js/runtime-main.e6712657.js.map",
     "static/css/2.d34346ea.chunk.css": "/sos-dashboard/static/css/2.d34346ea.chunk.css",
     "static/js/2.444b9a57.chunk.js": "/sos-dashboard/static/js/2.444b9a57.chunk.js",
     "static/js/2.444b9a57.chunk.js.map": "/sos-dashboard/static/js/2.444b9a57.chunk.js.map",
     "index.html": "/sos-dashboard/index.html",
-    "precache-manifest.08884e97ae9e9fda1c206fae1223dd54.js": "/sos-dashboard/precache-manifest.08884e97ae9e9fda1c206fae1223dd54.js",
+    "precache-manifest.a326bf38dd18c470ef53e85cbb719b12.js": "/sos-dashboard/precache-manifest.a326bf38dd18c470ef53e85cbb719b12.js",
     "service-worker.js": "/sos-dashboard/service-worker.js",
     "static/css/2.d34346ea.chunk.css.map": "/sos-dashboard/static/css/2.d34346ea.chunk.css.map",
     "static/css/main.e62c1386.chunk.css.map": "/sos-dashboard/static/css/main.e62c1386.chunk.css.map",
@@ -31,6 +31,6 @@
     "static/css/2.d34346ea.chunk.css",
     "static/js/2.444b9a57.chunk.js",
     "static/css/main.e62c1386.chunk.css",
-    "static/js/main.761b0ec1.chunk.js"
+    "static/js/main.82c69021.chunk.js"
   ]
 }
