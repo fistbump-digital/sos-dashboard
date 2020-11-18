@@ -71,6 +71,10 @@ function JobInput({ edit, match }) {
 		get(job, 'companyDetails.companyId._id', '')
 	)
 
+	const [companyName, setCompanyName] = useState(
+		get(job, 'companyDetails.companyName', '')
+	)
+
 	const [isCompanyDetailsVisible, setIsCompanyDetailsVisible] = useState(
 		get(job, 'companyDetails.isCompanyDetailsVisible', true)
 	)
@@ -130,6 +134,7 @@ function JobInput({ edit, match }) {
 			},
 			companyDetails: {
 				companyId,
+				companyName,
 				isCompanyDetailsVisible,
 			},
 			jobAddress: {

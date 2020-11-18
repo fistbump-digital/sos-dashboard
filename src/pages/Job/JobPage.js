@@ -36,6 +36,7 @@ import {
 import { toast } from '../../components/Toast'
 import { filter, get } from 'lodash'
 import { SMUIIconButton } from '../../styles/StyledMaterialUI'
+import EnhancedTable from './components/NewTable'
 
 function JobPage({ toApply }) {
 	// React Hooks
@@ -79,7 +80,7 @@ function JobPage({ toApply }) {
 		`Posted On`,
 		// `Assigned On`,
 	]
-
+	      
 	// Helper Functions
 	const onCheckHandler = (id) => {
 		const newData = {
@@ -126,6 +127,8 @@ function JobPage({ toApply }) {
 	const renderJobHeading = jobHeading.map((heading) => (
 		<TableHead key={uuid()}>{heading}</TableHead>
 	))
+
+
 
 	const renderJobData =
 		filterData &&
@@ -181,7 +184,7 @@ function JobPage({ toApply }) {
 		});
 		setFilterData(filterData);
 	}
-	console.log(jobData)
+	// console.log(jobData)
 
 	return (
 		<>
@@ -226,7 +229,8 @@ function JobPage({ toApply }) {
 			<ContentContainer>
 				{renderWithLoader(
 					filterData,
-					<Table headings={renderJobHeading}>{renderJobData}</Table>
+					// <Table headings={renderJobHeading}>{renderJobData}</Table>
+					<EnhancedTable filterData = {filterData} toApply={toApply} />
 				)}
 			</ContentContainer>
 		</>
