@@ -188,7 +188,7 @@ function JobPage({ toApply }) {
 
 	return (
 		<>
-			<Controls title={titleGenerator(ids, 'Jobs')} onSearchChange={(e) => onSearchChange(e)} search={true}>
+			{/* <Controls title={titleGenerator(ids, 'Jobs')} onSearchChange={(e) => onSearchChange(e)} search={true}>
 				{ids.length > 0 ? (
 					<>
 						{toApply ? (
@@ -217,7 +217,7 @@ function JobPage({ toApply }) {
 						)}
 					</>
 				)}
-			</Controls>
+			</Controls> */}
 
 			<DeleteModal
 				open={isModalOpen}
@@ -230,7 +230,7 @@ function JobPage({ toApply }) {
 				{renderWithLoader(
 					filterData,
 					// <Table headings={renderJobHeading}>{renderJobData}</Table>
-					<EnhancedTable filterData = {filterData} toApply={toApply} />
+					<EnhancedTable filterData = {filterData} setFilterData={setFilterData} jobData={jobData} toApply={toApply} />
 				)}
 			</ContentContainer>
 		</>

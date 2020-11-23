@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { filter, get } from 'lodash'
+import { NavLink, useHistory, useLocation } from 'react-router-dom'
 import { lighten, makeStyles } from '@material-ui/core/styles';
+
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { currentUserAtom } from '../../../recoil/atoms'
+
 import {
   Table,
   TableBody,
@@ -24,27 +30,13 @@ import {
 	titleGenerator,
 } from '../../../utils/helperFunctions'
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import AddIcon from '@material-ui/icons/Add';
+
+import Search from '../../../components/Search'
 
 function createData(code, title, company, city, openings, resumes, postedOn) {
   return { code, title, company, city, openings, resumes, postedOn};
 }
-
-// const rows = [
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Donut', 452, 25.0, 51, 4.9),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-//   createData('Honeycomb', 408, 3.2, 87, 6.5),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Jelly Bean', 375, 0.0, 94, 0.0),
-//   createData('KitKat', 518, 26.0, 65, 7.0),
-//   createData('Lollipop', 392, 0.2, 98, 0.0),
-//   createData('Marshmallow', 318, 0, 81, 2.0),
-//   createData('Nougat', 360, 19.0, 9, 37.0),
-//   createData('Oreo', 437, 18.0, 63, 4.0),
-// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -158,38 +150,65 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const { numSelected, jobData, setFilterData } = props;
+  const currentUser = useRecoilValue(currentUserAtom)
+  const history = useHistory()
+  const location = useLocation().pathname
+  
+  const onSearchChange = (e) => {
+		var inputVal = e.target.value
+		var filterData = jobData.filter(data => {
+			return data.jobOpeningInfo.jobTitle.toLowerCase().includes(inputVal) ||
+				data.companyDetails.companyId.companyName.toLowerCase().includes(inputVal) ||
+				data.jobDetails.jobCode.toLowerCase().includes(inputVal) ||
+				data.jobAddress.city.toLowerCase().includes(inputVal) 
+		});
+		setFilterData(filterData);
+	}
 
   return (
+    <>
     <Toolbar
       className={clsx(classes.root, {
         [classes.highlight]: numSelected > 0,
       })}
     >
       {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
+        <Typography style={{textAlign: 'left', flex: 'none'}} className={classes.title} color="inherit" variant="subtitle1" component="div">
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+        <Typography style={{textAlign: 'left', flex: 'none'}} className={classes.title} variant="h6" id="tableTitle" component="div">
           Jobs
         </Typography>
       )}
 
+      {/* search */}
+      <div style={{margin: '0 auto'}}>
+        <Search onChange={(e) => {onSearchChange(e)} } />
+      </div>
+
+
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
-            <DeleteIcon />
+            <DeleteIcon onClick={() => console.log('delete button click')} />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+        {get(currentUser, 'roleId.permissions.job.create') && (
+							<Tooltip title="Add Job">
+              <IconButton aria-label="add job" onClick={() => history.push(`${location}/add`)}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+						)}
+          </>
+        
       )}
     </Toolbar>
+    </>
   );
 };
 
@@ -221,7 +240,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable({filterData}) {
+export default function EnhancedTable({filterData,setFilterData, jobData, toApply}) {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('postedOn');
@@ -230,6 +249,7 @@ export default function EnhancedTable({filterData}) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const rows = [];
+  const location = useLocation().pathname
 
   filterData.map(job => {
           rows.push(
@@ -282,9 +302,6 @@ export default function EnhancedTable({filterData}) {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
 
   const isSelected = (code) => selected.indexOf(code) !== -1;
 
@@ -293,7 +310,7 @@ export default function EnhancedTable({filterData}) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} jobData={jobData} setFilterData={setFilterData} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -334,7 +351,14 @@ export default function EnhancedTable({filterData}) {
                         />
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row">
-                        {row.code}
+                      {toApply ? (
+                          row.code
+                        ) : (
+                          <NavLink to={`${location}/${row.code}`}>
+                            {row.code}
+                          </NavLink>
+                        )}
+
                       </TableCell>
                       <TableCell>{row.title}</TableCell>
                       <TableCell>{row.company}</TableCell>
