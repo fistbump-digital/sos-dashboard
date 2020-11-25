@@ -31,7 +31,7 @@ function JobInfo({ job }) {
 		targetDate,
 	} = jobDetails || {}
 
-	const { assignedOn, industry, jobTitle, jobType, noOfOpenings } =
+	const { assignedOn, industry, jobTitle, jobType, noOfOpenings, salary } =
 		jobOpeningInfo || {}
 
 	const renderList = (arr) =>
@@ -66,6 +66,14 @@ function JobInfo({ job }) {
 					<DataContainer>
 						<Title>Openings</Title>
 						<Content>{noOfOpenings}</Content>
+					</DataContainer>
+					<DataContainer>
+						<Title>Salary P.A</Title>
+						<Content>
+							{
+								salary ? <>{salary.from} - {salary.to}</> : <>Not specified</>
+							}
+						</Content>
 					</DataContainer>
 				</CategoryGrid>
 			</Category>

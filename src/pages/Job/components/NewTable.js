@@ -8,6 +8,8 @@ import { lighten, makeStyles } from '@material-ui/core/styles';
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { currentUserAtom } from '../../../recoil/atoms'
 
+import { CSVLink, CSVDownload } from "react-csv";
+
 import {
   Table,
   TableBody,
@@ -31,6 +33,7 @@ import {
 } from '../../../utils/helperFunctions'
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 import Search from '../../../components/Search'
 
@@ -73,6 +76,7 @@ const headCells = [
   { id: 'resumes', numeric: false, disablePadding: true, label: 'resumes' },
   { id: 'postedOn', numeric: false, disablePadding: true, label: 'posted on' },
 ];
+
 
 function EnhancedTableHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
@@ -150,7 +154,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, jobData, setFilterData } = props;
+  const { numSelected, jobData, setFilterData, rows } = props;
   const currentUser = useRecoilValue(currentUserAtom)
   const history = useHistory()
   const location = useLocation().pathname
@@ -204,6 +208,13 @@ const EnhancedTableToolbar = (props) => {
               </IconButton>
             </Tooltip>
 						)}
+            <CSVLink data={rows} headers={headCells.label} filename={"jobs.csv"}>
+              <Tooltip title="Download">
+                <IconButton aria-label="download" onClick={console.log('download')}>
+                  <GetAppIcon />
+                </IconButton>
+              </Tooltip>
+            </CSVLink>
           </>
         
       )}
@@ -246,10 +257,9 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
   const [orderBy, setOrderBy] = React.useState('postedOn');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const rows = [];
   const location = useLocation().pathname
+  const rows = [];
 
   filterData.map(job => {
           rows.push(
@@ -310,12 +320,12 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} jobData={jobData} setFilterData={setFilterData} />
+        <EnhancedTableToolbar numSelected={selected.length} jobData={jobData} setFilterData={setFilterData} rows={rows} />
         <TableContainer>
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            size="medium"
             aria-label="enhanced table"
           >
             <EnhancedTableHead
@@ -370,7 +380,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                   );
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={8} />
                 </TableRow>
               )}

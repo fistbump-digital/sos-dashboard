@@ -25,12 +25,15 @@ import {
 	TableHead,
 	TableRow,
 } from '../../styles'
-
+import IconButton from '@material-ui/core/IconButton';
 import { counter, renderWithLoader } from '../../utils/helperFunctions'
 import { stages } from '../../utils/sharedVariables'
 import JobInfo from './components/JobInfo'
 import { toast } from '../../components/Toast'
 import { v4 as uuid } from 'uuid'
+
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 
 function JobDetails({ match }) {
@@ -162,17 +165,15 @@ function JobDetails({ match }) {
 				title={get(selectedJob, 'jobOpeningInfo.jobTitle', 'Loading..')}>
 				{/* <Controls title='Details'> */}
 				{get(currentUser, 'roleId.permissions.job.delete') && (
-					<ControlButton onClick={toggleModal} color='secondary'>
-						Delete
-					</ControlButton>
+					<IconButton onClick={toggleModal}>
+						<DeleteIcon />
+					</IconButton>
 				)}
 				{get(currentUser, 'roleId.permissions.job.update') && (
-					<ControlButton
-						onClick={editNavHandler}
-						variant='contained'
-						color='primary'>
-						Edit
-					</ControlButton>
+					<IconButton
+						onClick={editNavHandler}>
+						<EditIcon />
+					</IconButton>
 				)}
 			</Controls>
 

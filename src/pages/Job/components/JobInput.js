@@ -33,6 +33,9 @@ import {
 } from '../../../utils/helperFunctions'
 import { toast } from '../../../components/Toast'
 
+import industries from '../../../industrires.json'
+import states from '../../../states.json'
+
 function JobInput({ edit, match }) {
 	const history = useHistory()
 
@@ -64,6 +67,14 @@ function JobInput({ edit, match }) {
 	)
 	const [noOfOpening, setNoOfOpening] = useState(
 		get(job, 'jobOpeningInfo.noOfOpenings')
+	)
+
+	const [salaryFrom, setSalaryFrom] = useState(
+		get(job, 'jobOpeningInfo.salary.from')
+	)
+
+	const [salaryTo, setSalaryTo] = useState(
+		get(job, 'jobOpeningInfo.salary.to')
 	)
 
 	//companydetails
@@ -129,6 +140,10 @@ function JobInput({ edit, match }) {
 				jobTitle,
 				jobType,
 				industry,
+				salary: {
+					from: salaryFrom,
+					to: salaryTo
+				},
 				assignedOn: new Date(),
 				noOfOpenings: Number(noOfOpening),
 			},
@@ -212,12 +227,21 @@ function JobInput({ edit, match }) {
 						onChange={(e) => setJobTitle(e.target.value)}
 						label='Job Title'
 					/>
-					<SMUITextField
-						variant='outlined'
-						value={industry}
-						onChange={(e) => setIndustry(e.target.value)}
-						label='Industry'
-					/>
+
+					<SMUIFormControl variant='outlined'>
+						<InputLabel id='industry'>Industry</InputLabel>
+						<SMUISelect
+							value={industry}
+							label='Industry'
+							onChange={(e) => setIndustry(e.target.value)}>
+							{
+								industries.map((data, i) => (
+									<MenuItem key={i} value={data.name}>{data.name}</MenuItem>
+								))
+							}
+						</SMUISelect>
+					</SMUIFormControl>
+					
 					<SMUITextField
 						variant='outlined'
 						value={noOfOpening}
@@ -233,9 +257,25 @@ function JobInput({ edit, match }) {
 							onChange={(e) => setJobType(e.target.value)}>
 							<MenuItem value='Full-time'>Full-Time</MenuItem>
 							<MenuItem value='Part-time'>Part-time</MenuItem>
-							<MenuItem value='Freelancing'>Part-time</MenuItem>
+							<MenuItem value='Freelancing'>Freelancing</MenuItem>
 						</SMUISelect>
 					</SMUIFormControl>
+
+					<SMUITextField
+						variant='outlined'
+						value={salaryFrom}
+						onChange={(e) => setSalaryFrom(e.target.value)}
+						type='number'
+						label='Salary from'
+					/>
+
+					<SMUITextField
+						variant='outlined'
+						value={salaryTo}
+						onChange={(e) => setSalaryTo(e.target.value)}
+						type='number'
+						label='Salary To'
+					/>
 
 					<SMUIFormControl variant='outlined'>
 						<InputLabel id='company'>Company</InputLabel>
@@ -272,17 +312,25 @@ function JobInput({ edit, match }) {
 						label='City'
 					/>
 
-					<SMUITextField
-						variant='outlined'
-						value={state}
-						onChange={(e) => setState(e.target.value)}
-						label='State'
-					/>
+					<SMUIFormControl variant='outlined'>
+						<InputLabel id='state'>State</InputLabel>
+						<SMUISelect
+							value={state}
+							label='State'
+							onChange={(e) => setState(e.target.value)}>
+							{
+								states.map(data => (
+									<MenuItem key={data.key} value={data.name}>{data.name}</MenuItem>
+								))
+							}
+						</SMUISelect>
+					</SMUIFormControl>
 					<SMUITextField
 						variant='outlined'
 						value={pincode}
 						onChange={(e) => setPincode(e.target.value)}
 						label='Pincode'
+						type='number'
 					/>
 					<SMUITextField
 						variant='outlined'
