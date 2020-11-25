@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/sos-dashboard/static/css/main.e62c1386.chunk.css",
-    "main.js": "/sos-dashboard/static/js/main.864fce68.chunk.js",
-    "main.js.map": "/sos-dashboard/static/js/main.864fce68.chunk.js.map",
+    "main.js": "/sos-dashboard/static/js/main.15878db9.chunk.js",
+    "main.js.map": "/sos-dashboard/static/js/main.15878db9.chunk.js.map",
     "runtime-main.js": "/sos-dashboard/static/js/runtime-main.e6712657.js",
     "runtime-main.js.map": "/sos-dashboard/static/js/runtime-main.e6712657.js.map",
     "static/css/2.d34346ea.chunk.css": "/sos-dashboard/static/css/2.d34346ea.chunk.css",
-    "static/js/2.22b9ff3c.chunk.js": "/sos-dashboard/static/js/2.22b9ff3c.chunk.js",
-    "static/js/2.22b9ff3c.chunk.js.map": "/sos-dashboard/static/js/2.22b9ff3c.chunk.js.map",
+    "static/js/2.a4cbbe21.chunk.js": "/sos-dashboard/static/js/2.a4cbbe21.chunk.js",
+    "static/js/2.a4cbbe21.chunk.js.map": "/sos-dashboard/static/js/2.a4cbbe21.chunk.js.map",
     "index.html": "/sos-dashboard/index.html",
-    "precache-manifest.2167f00aeaff1a925da0b5b9acd4c2fc.js": "/sos-dashboard/precache-manifest.2167f00aeaff1a925da0b5b9acd4c2fc.js",
+    "precache-manifest.d771d1c9ce1df6aa5c8621ddb929be18.js": "/sos-dashboard/precache-manifest.d771d1c9ce1df6aa5c8621ddb929be18.js",
     "service-worker.js": "/sos-dashboard/service-worker.js",
     "static/css/2.d34346ea.chunk.css.map": "/sos-dashboard/static/css/2.d34346ea.chunk.css.map",
     "static/css/main.e62c1386.chunk.css.map": "/sos-dashboard/static/css/main.e62c1386.chunk.css.map",
-    "static/js/2.22b9ff3c.chunk.js.LICENSE.txt": "/sos-dashboard/static/js/2.22b9ff3c.chunk.js.LICENSE.txt",
+    "static/js/2.a4cbbe21.chunk.js.LICENSE.txt": "/sos-dashboard/static/js/2.a4cbbe21.chunk.js.LICENSE.txt",
     "static/media/add.svg": "/sos-dashboard/static/media/add.15cf12ce.svg",
     "static/media/arrow.svg": "/sos-dashboard/static/media/arrow.dc486541.svg",
     "static/media/auth.svg": "/sos-dashboard/static/media/auth.910669c3.svg",
@@ -29,8 +29,8 @@
   "entrypoints": [
     "static/js/runtime-main.e6712657.js",
     "static/css/2.d34346ea.chunk.css",
-    "static/js/2.22b9ff3c.chunk.js",
+    "static/js/2.a4cbbe21.chunk.js",
     "static/css/main.e62c1386.chunk.css",
-    "static/js/main.864fce68.chunk.js"
+    "static/js/main.15878db9.chunk.js"
   ]
 }
