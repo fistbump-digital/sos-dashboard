@@ -1,7 +1,7 @@
 const STAGE = process.env.NODE_ENV === 'production' ? true : false
 
 export const API_URI = STAGE
-	? 'https://sos-node.herokuapp.com'
+	? 'https://careerebest-business-dashboard.herokuapp.com'
 	: 'http://localhost:4000'
 
 export const createJob = `${API_URI}/job`

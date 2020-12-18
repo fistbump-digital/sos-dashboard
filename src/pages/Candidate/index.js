@@ -48,6 +48,7 @@ import { toast } from '../../components/Toast'
 import { get } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { SMUIIconButton } from '../../styles/StyledMaterialUI'
+import NewCandidateTable from './components/NewCandidateTable'
 
 
 function CandidatePage() {
@@ -56,6 +57,7 @@ function CandidatePage() {
 	const [candidateData, setCandidateData] = useRecoilState(candidateAtom)
 	const [checked, setChecked] = useRecoilState(candidateCheckedAtom)
 	const selected = useRecoilValue(filterTrueCandidateChecked)
+	const [filterData, setFilterData] = useState();
 
 	const currentUser = useRecoilValue(currentUserAtom)
 
@@ -67,7 +69,7 @@ function CandidatePage() {
 
 	useEffect(() => {
 		axios.get(getCandidates, { withCredentials: true })
-			.then(({ data }) => setCandidateData(data))
+			.then(({ data }) => {setCandidateData(data); setFilterData(data);})
 			.catch((e) => console.log(e))
 	}, [checked, isModalOpen])
 
@@ -112,90 +114,96 @@ function CandidatePage() {
 	}
 
 	// Renderers
-	const renderCandidateData =
-		candidateData &&
-		candidateData.map((candidate) => {
-			return (
-				<TableRow key={candidate._id}>
-					<TableData>
-						<StyledCheckbox
-							type='checkbox'
-							checked={checked[candidate._id]}
-							color='primary'
-							onChange={() => onCheckHandler(candidate._id)}
-						/>
-					</TableData>
-					<TableData>
-						<NavLink to={`${location}/${candidate.candidateCode}`}>
-							{candidate.candidateCode}
-						</NavLink>{' '}
-					</TableData>
-					<TableData>{candidate.basic.fullName}</TableData>
-					<TableData>{candidate.basic.primaryEmail}</TableData>
-					<TableData>{candidate.basic.mobile}</TableData>
-					<TableData>{candidate.address.state}</TableData>
-					{/* <TableData>45</TableData> */}
-					<TableData>{candidate.professional.industry}</TableData>
-					<TableData>{candidate.professional.functionalArea}</TableData>
-					<TableData>{formatDate(candidate.createdAt)}</TableData>
-				</TableRow>
-			)
-		})
+	// const renderCandidateData =
+	// 	candidateData &&
+	// 	candidateData.map((candidate) => {
+	// 		return (
+	// 			<TableRow key={candidate._id}>
+	// 				<TableData>
+	// 					<StyledCheckbox
+	// 						type='checkbox'
+	// 						checked={checked[candidate._id]}
+	// 						color='primary'
+	// 						onChange={() => onCheckHandler(candidate._id)}
+	// 					/>
+	// 				</TableData>
+	// 				<TableData>
+	// 					<NavLink to={`${location}/${candidate.candidateCode}`}>
+	// 						{candidate.candidateCode}
+	// 					</NavLink>{' '}
+	// 				</TableData>
+	// 				<TableData>{candidate.basic.fullName}</TableData>
+	// 				<TableData>{candidate.basic.primaryEmail}</TableData>
+	// 				<TableData>{candidate.basic.mobile}</TableData>
+	// 				<TableData>{candidate.address.state}</TableData>
+	// 				{/* <TableData>45</TableData> */}
+	// 				<TableData>{candidate.professional.industry}</TableData>
+	// 				<TableData>{candidate.professional.functionalArea}</TableData>
+	// 				<TableData>{formatDate(candidate.createdAt)}</TableData>
+	// 			</TableRow>
+	// 		)
+	// 	})
 
 	const toPage = (link) => {
 		history.push(link)
 	}
 
 	return (
-		<>
-			<Controls title={titleGenerator(selected, 'Candidate Controls')}>
-				{selected.length > 0 ? (
-					<>
-						{get(currentUser, 'roleId.permissions.candidate.delete') && (
-							<SMUIIconButton
-								color='secondary'
-								onClick={toggleModal}
-								color='secondary'>
-								<Delete />
-							</SMUIIconButton>
-						)}
+		<ContentContainer>
+			{renderWithLoader(
+				filterData,
+				<NewCandidateTable filterData = {filterData} setFilterData={setFilterData} jobData={candidateData}/>
+			)}
+		</ContentContainer>
+		// <>
+		// 	<Controls title={titleGenerator(selected, 'Candidate Controls')}>
+		// 		{selected.length > 0 ? (
+		// 			<>
+		// 				{get(currentUser, 'roleId.permissions.candidate.delete') && (
+		// 					<SMUIIconButton
+		// 						color='secondary'
+		// 						onClick={toggleModal}
+		// 						color='secondary'>
+		// 						<Delete />
+		// 					</SMUIIconButton>
+		// 				)}
 
-						{get(currentUser, 'roleId.permissions.candidate.update') && (
-							<ControlButton
-								variant='contained'
-								color='primary'
-								onClick={() => toPage('/job/apply')}>
-								Assign
-							</ControlButton>
-						)}
-					</>
-				) : (
-					<>
-						{get(currentUser, 'roleId.permissions.candidate.create') && (
-							<SMUIIconButton
-								color='primary'
-								onClick={() => toPage(`${location}/add`)}>
-								<AddCircle />
-							</SMUIIconButton>
-						)}
-					</>
-				)}
-				{/* <Button variant="contained" color="primary">Import</Button>
-				<Button variant="contained" color="primary">Export</Button> */}
-			</Controls>
-			<DeleteModal
-				open={isModalOpen}
-				onClose={toggleModal}
-				count={selected.length}
-				deleteHandler={deleteHandler}
-			/>
-			<ContentContainer>
-				{renderWithLoader(
-					candidateData,
-					<Table headings={renderCandidateHeading}>{renderCandidateData}</Table>
-				)}
-			</ContentContainer>
-		</>
+		// 				{get(currentUser, 'roleId.permissions.candidate.update') && (
+		// 					<ControlButton
+		// 						variant='contained'
+		// 						color='primary'
+		// 						onClick={() => toPage('/job/apply')}>
+		// 						Assign
+		// 					</ControlButton>
+		// 				)}
+		// 			</>
+		// 		) : (
+		// 			<>
+		// 				{get(currentUser, 'roleId.permissions.candidate.create') && (
+		// 					<SMUIIconButton
+		// 						color='primary'
+		// 						onClick={() => toPage(`${location}/add`)}>
+		// 						<AddCircle />
+		// 					</SMUIIconButton>
+		// 				)}
+		// 			</>
+		// 		)}
+		// 		{/* <Button variant="contained" color="primary">Import</Button>
+		// 		<Button variant="contained" color="primary">Export</Button> */}
+		// 	</Controls>
+		// 	<DeleteModal
+		// 		open={isModalOpen}
+		// 		onClose={toggleModal}
+		// 		count={selected.length}
+		// 		deleteHandler={deleteHandler}
+		// 	/>
+		// 	<ContentContainer>
+		// 		{renderWithLoader(
+		// 			candidateData,
+		// 			<Table headings={renderCandidateHeading}>{renderCandidateData}</Table>
+		// 		)}
+		// 	</ContentContainer>
+		// </>
 	)
 }
 
