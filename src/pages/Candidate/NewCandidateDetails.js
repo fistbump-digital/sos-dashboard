@@ -26,6 +26,7 @@ import {
 	TableRow,
 } from '../../styles'
 import CandidateInfo from './components/CandidateInfo'
+import NewCandidateInfo from './components/NewCandidateInfo'
 import DeleteModal from '../../components/Modals/DeleteModal'
 import {
 	counter,
@@ -56,17 +57,13 @@ function CandidateDetails({ match }) {
 			})
 			history.goBack()
 			toast.success('Candidate Deleted')
-		} catch (e) {
-			toast.error('Something went wrong')
+		} catch (err) {
+			toast.error(`Error: ${err.message}`)
 		}
 	}
 
-	const candidates = useRecoilValue(candidateAtom)
-	const [candidate, setCandidate] = useState()
+	const [candidate, setCandidate] = useRecoilState(candidateAtom)
 
-	const singleCandidate = candidates
-		? candidates.find((candidate) => candidate.candidateCode === id)
-		: candidate
 
 	useEffect(() => {
 		axios.get(`${candidateEndpoint}/${id}`, { withCredentials: true })
@@ -81,7 +78,7 @@ function CandidateDetails({ match }) {
 	}
 
 	const assignHandler = () => {
-		setChecked({ [singleCandidate._id]: true })
+		setChecked({ [candidate._id]: true })
 		history.push('/job/apply')
 	}
 
@@ -89,7 +86,7 @@ function CandidateDetails({ match }) {
 	const renderHeading = headings.map((heading) => (
 		<TableHead key={uuid()}>{heading}</TableHead>
 	))
-	const renderData = get(singleCandidate, 'statusIds', []).map((status) => {
+	const renderData = get(candidate, 'statusIds', []).map((status) => {
 		return (
 			<TableRow key={status._id}>
 				<TableData>{status.jobId.jobDetails.jobCode}</TableData>
@@ -102,7 +99,7 @@ function CandidateDetails({ match }) {
 	})
 
 	const stageDataCount = counter(
-		get(singleCandidate, 'statusIds', []).map(
+		get(candidate, 'statusIds', []).map(
 			(statusId) => statusId.currentStage.stageName
 		)
 	)
@@ -124,14 +121,14 @@ function CandidateDetails({ match }) {
 				return (
 					<>
 						{renderWithLoader(
-							singleCandidate,
+							candidate,
 							<Table headings={renderHeading}>{renderData}</Table>
 						)}
 					</>
 				)
 
 			case 2:
-				return <CandidateInfo data={singleCandidate} />
+				return <NewCandidateInfo data={candidate} />
 			default:
 				break
 		}
@@ -139,7 +136,7 @@ function CandidateDetails({ match }) {
 
 	return (
 		<>
-			<Controls title={get(singleCandidate, 'basic.fullName', 'Loading..')}>
+			<Controls title={candidate ? candidate.candidateName : 'Loading...'}>
 				{get(currentUser, 'roleId.permissions.candidate.delete') && (
 					<IconButton onClick={toggleModal} color='secondary'>
 						<Delete />

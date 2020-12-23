@@ -1,8 +1,24 @@
 import React, {useState} from 'react'
 import axios from 'axios'
 import {createBulkCandidate} from '../../../api/index'
+import {Modal, Button, IconButton, Tooltip} from '@material-ui/core'
+import {
+	Card,
+	CardTitle,
+	CategoryTitle,
+        Content,
+	ContentContainer,
+	ControlButton,
+	InputContainer,
+	ItemListContainer,
+	MultipleItemInputContainer,
+        StyledTextField,
+} from '../../../styles'
+import { toast } from '../../../components/Toast'
+import CloseIcon from '@material-ui/icons/Close';
+import { Close } from '@material-ui/icons'
 
-const BulkUpload = () => {
+const BulkUpload = ({setBulkUpload}) => {
 
         const [selectedFile, setSelectedFile] = useState(null)
 
@@ -11,24 +27,36 @@ const BulkUpload = () => {
         }
 
         const onFileUpload = () => {
-                const formData = new FormData()
-                formData.append(
-                        "myFile",
-                        selectedFile,
-                        selectedFile.name
-                )
+                if(!selectedFile) {
+                        toast.error('Please select a file')
+                }
+                else {
+                        const formData = new FormData()
+                        formData.append(
+                                "myFile",
+                                selectedFile,
+                                selectedFile.name
+                        )
 
-                console.log(selectedFile)
+                        console.log(selectedFile)
+                        console.log(formData)
 
-                axios({
-                        method: 'post',
-                        url: createBulkCandidate,
-                        data: formData,
-                        withCredentials: true,
-                        headers: {'Content-Type': 'multipart/form-data'}
-                })
-                .then(() => alert('Data Upload Successfully'))
-                .catch(err => alert(err))
+                        axios({
+                                method: 'post',
+                                url: createBulkCandidate,
+                                data: formData,
+                                withCredentials: true,
+                                headers: {'Content-Type': 'multipart/form-data'}
+                        })
+                        .then(() => {
+                                toast.success('Data Uploaded Successfully')
+                                setSelectedFile(null)
+                                setBulkUpload(false)
+                        })
+                        .catch(err => {
+                                toast.error(`Error: ${err.message}`)
+                        })
+                }
         }
 
         const fileData = () => { 
@@ -46,23 +74,25 @@ const BulkUpload = () => {
                                 </p> 
                         </div> 
                         )
-                } else { 
-                        return ( 
-                                <div> 
-                                        <br /> 
-                                        <h4>Choose before Pressing the Upload button</h4> 
-                                </div> 
-                                )
-                        } 
+                }
                 }
 
         return (
-                <div>
+                <ContentContainer>
+                <Card style={{position: 'relative', paddingBottom: 40}}>
+                        <div style={{position: 'absolute', right: 10}}>
+                                <Tooltip title="Close">
+                                        <IconButton onClick={() => setBulkUpload(false)}>
+                                                <Close />
+                                        </IconButton>
+                                </Tooltip>
+                        </div>
                       <h2>Bulk Upload</h2>
-                      <input type = 'file' onChange = {onFileChange} />
-                      <button onClick={onFileUpload}>Upload!</button>
+                      <input type = 'file' onChange = {onFileChange} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+                      <Button onClick={onFileUpload} variant='contained' color='primary'>Upload!</Button>
                       {fileData()}
-                </div>
+                </Card>
+                </ContentContainer>
         )
 }
 

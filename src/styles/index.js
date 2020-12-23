@@ -6,6 +6,7 @@ import {
 	MenuItem,
 	Select,
 	TextField,
+	Modal
 } from '@material-ui/core'
 
 export const RemoveSpaces = css`

@@ -1,12 +1,12 @@
 import React from 'react'
 import { PageLayout } from '../../styles'
-import BulkUpload from './components/BulkUpload'
 import CandidateInput from './components/CandidateInput'
+import NewCandidateInput from './components/NewCandidateInput'
 
 function AddCandidate() {
 	return (
 		<>
-			<BulkUpload />
+			<NewCandidateInput />
 			{/* <CandidateInput /> */}
 		</>
 	)

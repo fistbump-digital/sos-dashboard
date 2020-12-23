@@ -282,7 +282,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
         rows.push(
                 createData(candidate._id, candidate['candidateName'], candidate['resumeTitle'], candidate['contactNo'], candidate['email'], candidate['workExp'], candidate['annualSalary'], candidate['currentLocation'], candidate['preferredLocation'], candidate['currentEmployer'], candidate['designation'], candidate['UGCourse'], candidate['PGCourse'], candidate['postPGCourse'], candidate['DOB'], candidate['postalAddress'], candidate['resumeId'],  candidate['lastActiveDate'], candidate['commentOne'], candidate['commentOne'], candidate['commentTwo'], candidate['commentThree'],  candidate['commentFour'], candidate['commentFive'])
         );
-        console.log(rows)
+        // console.log(rows)
   })
 
   const handleRequestSort = (event, property) => {
@@ -381,7 +381,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                       {toApply ? (
                           row.candidateName
                         ) : (
-                          <NavLink to={`${location}/${row.code}`}>
+                          <NavLink to={`${location}/${row.resumeID}`}>
                             {row.candidateName}
                           </NavLink>
                         )}
@@ -409,7 +409,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                                 {toApply ? (
                                         row.code
                                         ) : (
-                                        <NavLink to={`${location}/${row.code}`}>
+                                        <NavLink to={`${location}/${row.resumeID}`}>
                                         {row.resumeID}
                                         </NavLink>
                                 )}
