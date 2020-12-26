@@ -37,8 +37,8 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 
 import Search from '../../../components/Search'
 
-function createData(code, title, company, city, openings, resumes, postedOn) {
-  return { code, title, company, city, openings, resumes, postedOn};
+function createData(code, title, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttactmentLink) {
+  return { code, title, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttactmentLink};
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -68,13 +68,24 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'code', numeric: false, disablePadding: true, label: 'job code' },
-  { id: 'title', numeric: false, disablePadding: true, label: 'job title' },
+  { id: 'jobCode', numeric: false, disablePadding: true, label: 'job code' },
+  { id: 'jobTitle', numeric: false, disablePadding: true, label: 'job title' },
+  { id: 'state', numeric: false, disablePadding: true, label: 'state' },
+  { id: 'district', numeric: false, disablePadding: true, label: 'district' },
+  { id: 'zone', numeric: false, disablePadding: true, label: 'zone' },
+  { id: 'status', numeric: false, disablePadding: true, label: 'status' },
+  { id: 'noOfOpening', numeric: false, disablePadding: true, label: 'no of opening' },
+  { id: 'startDate', numeric: false, disablePadding: true, label: 'start date' },
+  { id: 'closeDate', numeric: false, disablePadding: true, label: 'close date' },
+  { id: 'industry', numeric: false, disablePadding: true, label: 'industry' },
   { id: 'company', numeric: false, disablePadding: true, label: 'company' },
-  { id: 'city', numeric: false, disablePadding: true, label: 'city' },
-  { id: 'openings', numeric: false, disablePadding: true, label: 'openings' },
-  { id: 'resumes', numeric: false, disablePadding: true, label: 'resumes' },
-  { id: 'postedOn', numeric: false, disablePadding: true, label: 'posted on' },
+  { id: 'vertical', numeric: false, disablePadding: true, label: 'vertical' },
+  { id: 'division', numeric: false, disablePadding: true, label: 'division' },
+  { id: 'ctcMin', numeric: false, disablePadding: true, label: 'CTC Min' },
+  { id: 'ctcMax', numeric: false, disablePadding: true, label: 'CTC Max' },
+  { id: 'CVShared', numeric: false, disablePadding: true, label: 'No. of cvs shared' },
+  { id: 'sharedToHRDate', numeric: false, disablePadding: true, label: 'shared with hr date' },
+  { id: 'JDAttachmentLink', numeric: false, disablePadding: true, label: 'jd attachment' },
 ];
 
 
@@ -92,7 +103,7 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
+            inputProps={{ 'aria-label': 'select all' }}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -162,10 +173,15 @@ const EnhancedTableToolbar = (props) => {
   const onSearchChange = (e) => {
 		var inputVal = e.target.value
 		var filterData = jobData.filter(data => {
-			return data.jobOpeningInfo.jobTitle.toLowerCase().includes(inputVal) ||
-				data.companyDetails.companyId.companyName.toLowerCase().includes(inputVal) ||
-				data.jobDetails.jobCode.toLowerCase().includes(inputVal) ||
-				data.jobAddress.city.toLowerCase().includes(inputVal) 
+			return data.jobCode.toLowerCase().includes(inputVal) || 
+      data.jobTitle.toLowerCase().includes(inputVal) || 
+      data.state.toLowerCase().includes(inputVal) || 
+      data.district.toLowerCase().includes(inputVal) || 
+      data.zone.toLowerCase().includes(inputVal) || 
+      data.company.toLowerCase().includes(inputVal) || 
+      data.vertical.toLowerCase().includes(inputVal) || 
+      data.division.toLowerCase().includes(inputVal) || 
+      data.industry.toLowerCase().includes(inputVal)
 		});
 		setFilterData(filterData);
 	}
@@ -262,8 +278,9 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
   const rows = [];
 
   filterData.map(job => {
+    const {jobCode, jobTitle, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttachmentLink} = job
           rows.push(
-            createData(job.jobDetails.jobCode, job.jobOpeningInfo.jobTitle, job.companyDetails.companyId.companyName, job.jobAddress.city, job.jobOpeningInfo.noOfOpenings, job.statusIds.length, formatDate(job.createdAt))
+            createData(jobCode, jobTitle, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttachmentLink)
           );
   })
 
@@ -360,7 +377,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row">
+                      <TableCell component="th" id={labelId} scope="row" style={{minWidth: 120}}>
                       {toApply ? (
                           row.code
                         ) : (
@@ -370,12 +387,23 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                         )}
 
                       </TableCell>
-                      <TableCell>{row.title}</TableCell>
+                      <TableCell style={{minWidth: 200}}>{row.title}</TableCell>
+                      <TableCell style={{minWidth: 150}}>{row.state}</TableCell>
+                      <TableCell style={{minWidth: 120}}>{row.district}</TableCell>
+                      <TableCell>{row.zone}</TableCell>
+                      <TableCell>{row.status}</TableCell>
+                      <TableCell style={{minWidth: 150}}>{row.noOfOpening}</TableCell>
+                      <TableCell style={{minWidth: 140}}>{formatDate(row.startDate)}</TableCell>
+                      <TableCell style={{minWidth: 140}}>{formatDate(row.closeDate)}</TableCell>
+                      <TableCell style={{minWidth: 120}}>{row.industry}</TableCell>
                       <TableCell>{row.company}</TableCell>
-                      <TableCell>{row.city}</TableCell>
-                      <TableCell>{row.openings}</TableCell>
-                      <TableCell>{row.resumes}</TableCell>
-                      <TableCell>{row.postedOn}</TableCell>
+                      <TableCell style={{minWidth: 150}}>{row.vertical}</TableCell>
+                      <TableCell>{row.division}</TableCell>
+                      <TableCell style={{minWidth: 120}}>{row.ctcMin}</TableCell>
+                      <TableCell style={{minWidth: 120}}>{row.ctcMax}</TableCell>
+                      <TableCell style={{minWidth: 180}}>{row.CVShared}</TableCell>
+                      <TableCell style={{minWidth: 200}}>{row.sharedToHRDate}</TableCell>
+                      <TableCell style={{minWidth: 200}}><a href={row.JDAttactmentLink} target='_blank'>Link</a></TableCell>
                     </TableRow>
                   );
                 })}

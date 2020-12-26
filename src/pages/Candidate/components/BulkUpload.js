@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import {createBulkCandidate} from '../../../api/index'
 import {Modal, Button, IconButton, Tooltip} from '@material-ui/core'
 import {
 	Card,
@@ -18,7 +17,9 @@ import { toast } from '../../../components/Toast'
 import CloseIcon from '@material-ui/icons/Close';
 import { Close } from '@material-ui/icons'
 
-const BulkUpload = ({setBulkUpload}) => {
+const BulkUpload = ({setBulkUpload, createBulk}) => {
+
+        console.log(createBulk)
 
         const [selectedFile, setSelectedFile] = useState(null)
 
@@ -39,11 +40,10 @@ const BulkUpload = ({setBulkUpload}) => {
                         )
 
                         console.log(selectedFile)
-                        console.log(formData)
 
                         axios({
                                 method: 'post',
-                                url: createBulkCandidate,
+                                url: createBulk,
                                 data: formData,
                                 withCredentials: true,
                                 headers: {'Content-Type': 'multipart/form-data'}

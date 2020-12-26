@@ -33,8 +33,7 @@ import {
 } from '../../../utils/helperFunctions'
 import { toast } from '../../../components/Toast'
 
-import industries from '../../../industrires.json'
-import states from '../../../states.json'
+import {states} from '../../../statesList'
 
 function JobInput({ edit, match }) {
 	const history = useHistory()
@@ -234,11 +233,11 @@ function JobInput({ edit, match }) {
 							value={industry}
 							label='Industry'
 							onChange={(e) => setIndustry(e.target.value)}>
-							{
+							{/* {
 								industries.map((data, i) => (
 									<MenuItem key={i} value={data.name}>{data.name}</MenuItem>
 								))
-							}
+							} */}
 						</SMUISelect>
 					</SMUIFormControl>
 					

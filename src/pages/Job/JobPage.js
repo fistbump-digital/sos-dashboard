@@ -148,7 +148,7 @@ function JobPage({ toApply }) {
 						/>
 					</TableData>
 
-					<TableData>
+					{/* <TableData>
 						{toApply ? (
 							job.jobDetails.jobCode
 						) : (
@@ -162,7 +162,7 @@ function JobPage({ toApply }) {
 					<TableData>{job.jobAddress.city}</TableData>
 					<TableData>{job.jobOpeningInfo.noOfOpenings}</TableData>
 					<TableData>{job.statusIds.length}</TableData>
-					<TableData>{formatDate(job.createdAt)}</TableData>
+					<TableData>{formatDate(job.createdAt)}</TableData> */}
 					{/* <TableData>
 						{new Date(job.jobOpeningInfo.assignedOn).toDateString()}
 					</TableData> */}
@@ -177,10 +177,15 @@ function JobPage({ toApply }) {
 	const onSearchChange = (e) => {
 		var inputVal = e.target.value
 		var filterData = jobData.filter(data => {
-			return data.jobOpeningInfo.jobTitle.toLowerCase().includes(inputVal) ||
-				data.companyDetails.companyId.companyName.toLowerCase().includes(inputVal) ||
-				data.jobDetails.jobCode.toLowerCase().includes(inputVal) ||
-				data.jobAddress.city.toLowerCase().includes(inputVal) 
+			return data.jobCode.toLowerCase().includes(inputVal) || 
+				data.jobTitle.toLowerCase().includes(inputVal) || 
+				data.state.toLowerCase().includes(inputVal) || 
+				data.district.toLowerCase().includes(inputVal) || 
+				data.zone.toLowerCase().includes(inputVal) || 
+				data.company.toLowerCase().includes(inputVal) || 
+				data.vertical.toLowerCase().includes(inputVal) || 
+				data.division.toLowerCase().includes(inputVal) || 
+				data.industry.toLowerCase().includes(inputVal)
 		});
 		setFilterData(filterData);
 	}

@@ -34,6 +34,7 @@ import { v4 as uuid } from 'uuid'
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import NewJobInfo from './components/NewJobInfo'
 
 
 function JobDetails({ match }) {
@@ -46,7 +47,7 @@ function JobDetails({ match }) {
 	const currentUser = useRecoilValue(currentUserAtom)
 
 	const selectedJob = jobFullData
-		? jobFullData.find((job) => job.jobDetails.jobCode === id)
+		? jobFullData.find((job) => job.jobCode === id)
 		: job
 
 	const stageDataCount = counter(
@@ -89,7 +90,7 @@ function JobDetails({ match }) {
 			history.goBack()
 		} catch (err) {
 			toggleModal()
-			toast.error('Something went wrong')
+			toast.error(`Error: ${err.message}`)
 		}
 	}
 
@@ -152,7 +153,8 @@ function JobDetails({ match }) {
 				)
 
 			case 2:
-				return <JobInfo job={selectedJob} />
+				// return <JobInfo job={selectedJob} />
+				return <NewJobInfo data={selectedJob} />
 
 			default:
 				break
@@ -162,7 +164,7 @@ function JobDetails({ match }) {
 	return (
 		<>
 			<Controls
-				title={get(selectedJob, 'jobOpeningInfo.jobTitle', 'Loading..')}>
+				title={get(selectedJob, 'jobTitle', 'Loading..')}>
 				{/* <Controls title='Details'> */}
 				{get(currentUser, 'roleId.permissions.job.delete') && (
 					<IconButton onClick={toggleModal}>

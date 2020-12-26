@@ -7,6 +7,7 @@ import {
 	Select,
 	TextField,
 } from '@material-ui/core'
+import {Autocomplete} from '@material-ui/lab'
 
 export const SMUIButton = styled(Button)`
 	&& {
@@ -21,6 +22,15 @@ export const SMUITextField = styled(TextField)`
 	}
 `
 export const SMUISelect = styled(Select)`
+	&& {
+		width: 100%;
+		/* margin: 10px 0px; */
+		/* padding: 5px 0px; */
+
+		text-align: left;
+	}
+`
+export const SMUIAutocomplete = styled(Autocomplete)`
 	&& {
 		width: 100%;
 		/* margin: 10px 0px; */

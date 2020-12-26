@@ -9,6 +9,7 @@ import {
 	pickerDateFormat,
 	renderArr,
 } from '../../../utils/helperFunctions'
+import {createBulkCandidate} from '../../../api/index'
 import Controls from '../../../components/Controls'
 import {
 	Card,
@@ -128,7 +129,7 @@ const NewCandidateInput = () => {
         return (
                 <>
                 {
-                        bulkUpload ? <BulkUpload setBulkUpload={setBulkUpload} /> : null
+                        bulkUpload ? <BulkUpload setBulkUpload={setBulkUpload} createBulk={createBulkCandidate} /> : null
                 }
                 <form onSubmit={formik.handleSubmit}>
                         <Controls title='Add New Candidate'>

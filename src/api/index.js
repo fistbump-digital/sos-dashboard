@@ -18,6 +18,7 @@ export const getCandidates = `${API_URI}/candidates`
 export const applyJob = `${API_URI}/apply`
 
 export const jobEndpoint = `${API_URI}/job`
+export const createBulkJob = `${API_URI}/jobsupload`
 export const jobsEndpoint = `${API_URI}/jobs`
 
 export const candidateEndpoint = `${API_URI}/candidate`
