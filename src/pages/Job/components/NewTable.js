@@ -364,7 +364,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.code)}
+                      onClick={(event) => {handleClick(event, row.code)}}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

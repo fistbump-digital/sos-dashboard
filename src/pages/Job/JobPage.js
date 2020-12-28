@@ -88,6 +88,8 @@ function JobPage({ toApply }) {
 			[id]: !checked[id],
 		}
 		setChecked(newData)
+
+		console.log(checked)
 	}
 
 	const deleteHandler = async () => {

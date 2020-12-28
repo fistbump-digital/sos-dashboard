@@ -6,6 +6,11 @@ export const jobAtom = atom({
 	default: null,
 })
 
+export const singlejobAtom = atom({
+	key: 'singleJob',
+	default: null
+})
+
 export const candidateAtom = atom({
 	key: 'candidates',
 	default: null,

@@ -5,11 +5,11 @@ import {useFormik} from 'formik'
 import 'date-fns'
 import { get } from 'lodash'
 import { useHistory } from 'react-router-dom'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { companiesEndpoint, jobEndpoint, createBulkJob } from '../../../api'
 import Controls from '../../../components/Controls'
-import { companyAtom, currentUserAtom, jobAtom } from '../../../recoil/atoms'
+import { companyAtom, currentUserAtom, jobAtom, singlejobAtom } from '../../../recoil/atoms'
 import { IconButton, InputLabel, MenuItem, Tooltip, Grid, TextField } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { AddCircle } from '@material-ui/icons'
@@ -41,12 +41,14 @@ import BulkUpload from '../../Candidate/components/BulkUpload'
 import {jobStatus, industries, companies, verticals, divisions} from '../../../jobsDataList'
 import {states, districts, zones} from '../../../statesList'
 
-function NewJobInput() {
+function NewJobInput(props) {
 
+        const {edit} = props
         const history = useHistory()
         const currentUser = useRecoilValue(currentUserAtom)
         const [loading, setLoading] = useState(false)
         const [bulkUpload, setBulkUpload] = useState(false)
+        const [singleJobData, setSingleJobData] = useRecoilState(singlejobAtom)
 
         const formValidation = yup.object({
                 jobCode: yup.string('Enter job code').required('Job Code required'),
@@ -69,36 +71,73 @@ function NewJobInput() {
                 JDAttachmentLink: yup.string('Enter atachment link')
         })
 
+        const {jobCode, jobTitle, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttachmentLink} = singleJobData || {}
+
         const formik = useFormik({
-                initialValues: {
-                        jobCode: '',
-                        jobTitle: '',
-                        state: '',
-                        district: '',
-                        zone: '',
-                        status: '',
-                        noOfOpening: '',
-                        startDate: '',
-                        closeDate: '',
-                        industry: '',
-                        company: '',
-                        vertical: '',
-                        division: '',
-                        ctcMin: '',
-                        ctcMax: '',
-                        CVShared: '',
-                        sharedToHRDate: '',
-                        JDAttachmentLink: ''
-                },
+                initialValues:
+                edit ? 
+                        {
+                                jobCode,
+                                jobTitle,
+                                state,
+                                district,
+                                zone,
+                                status,
+                                noOfOpening,
+                                startDate: pickerDateFormat(startDate),
+                                closeDate: pickerDateFormat(closeDate),
+                                industry,
+                                company,
+                                vertical,
+                                division,
+                                ctcMin,
+                                ctcMax,
+                                CVShared,
+                                sharedToHRDate,
+                                JDAttachmentLink
+                        } :
+                        {
+                                jobCode: '',
+                                jobTitle: '',
+                                state: '',
+                                district: '',
+                                zone: '',
+                                status: '',
+                                noOfOpening: '',
+                                startDate: '',
+                                closeDate: '',
+                                industry: '',
+                                company: '',
+                                vertical: '',
+                                division: '',
+                                ctcMin: '',
+                                ctcMax: '',
+                                CVShared: '',
+                                sharedToHRDate: '',
+                                JDAttachmentLink: ''
+                        },
                 validationSchema: formValidation,
                 onSubmit: (values, {resetForm}) => {
                         // alert(`submit: ${JSON.stringify(values)}`)
                         setLoading(true)
+                        !edit ? 
                         axios.post(jobEndpoint, values, {withCredentials: true})
                         .then(data => {
-                                setLoading(false);
+                                setLoading(false)
                                 toast.success('New job added')
                                 resetForm({values: ''})
+                        })
+                        .catch(err => {
+                                setLoading(false)
+                                toast.error(`Error: ${err.message}`)
+                        }) : 
+                        axios.patch(`${jobEndpoint}/${jobCode}`, values, {withCredentials: true})
+                        .then(data => {
+                                setLoading(false);
+                                toast.success(`job updated`)
+                                resetForm({values: ''})
+                                setSingleJobData(data.data)
+                                setTimeout(() => {history.goBack()}, 1000)
                         })
                         .catch(err => {
                                 setLoading(false)
@@ -114,10 +153,14 @@ function NewJobInput() {
                 }
                         <form onSubmit={formik.handleSubmit}>
                         <Controls title='Add New Job'>
-                                <Tooltip title="Excel bulk upload">
-                                        <IconButton ><PublishIcon onClick={() => setBulkUpload(true)} /></IconButton>
-                                </Tooltip>
-				<ControlButton color='secondary'>Reset</ControlButton>
+                                {
+                                        !edit ? (
+                                                <Tooltip title="Excel bulk upload">
+                                                        <IconButton ><PublishIcon onClick={() => setBulkUpload(true)} /></IconButton>
+                                                </Tooltip>
+                                        ) : null
+                                }
+				<ControlButton color='secondary' onClick={() => formik.resetForm()}>Reset</ControlButton>
 				{(get(currentUser, 'roleId.candidate.job.create') ||
 					get(currentUser, 'roleId.permissions.candidate.create')) && (
 					<ControlButton
@@ -214,7 +257,7 @@ function NewJobInput() {
                                                         name='startDate'
                                                         id='startDate'
                                                         type="date"
-                                                        value={formik.values.startDate}
+                                                        defaultValue={formik.values.startDate}
                                                                         onChange={formik.handleChange}
                                                                         error={formik.touched.startDate && Boolean(formik.errors.startDate)}
                                                                         helperText={formik.touched.startDate && formik.errors.startDate}
@@ -226,7 +269,7 @@ function NewJobInput() {
                                                         name='closeDate'
                                                         id='closeDate'
                                                         type="date"
-                                                        value={formik.values.closeDate}
+                                                        defaultValue={formik.values.closeDate}
                                                                         onChange={formik.handleChange}
                                                                         error={formik.touched.closeDate && Boolean(formik.errors.closeDate)}
                                                                         helperText={formik.touched.closeDate && formik.errors.closeDate}
@@ -254,44 +297,44 @@ function NewJobInput() {
                                                 <SMUITextField
                                                                 label="Vertical" 
                                                                 variant="outlined"
-                                                                name='verticals'
-                                                                id='verticals'
-                                                                value={formik.values.verticals}
+                                                                name='vertical'
+                                                                id='vertical'
+                                                                value={formik.values.vertical}
                                                                 onChange={formik.handleChange}
-                                                                error={formik.touched.verticals && Boolean(formik.errors.verticals)}
-                                                                helperText={formik.touched.verticals && formik.errors.verticals}
+                                                                error={formik.touched.verticals && Boolean(formik.errors.vertical)}
+                                                                helperText={formik.touched.verticals && formik.errors.vertical}
                                                         />
                                                 <SMUITextField
                                                         label="Division" 
                                                         variant="outlined"
-                                                        name='vertical'
-                                                        id='vertical'
-                                                        value={formik.values.vertical}
+                                                        name='division'
+                                                        id='division'
+                                                        value={formik.values.division}
                                                         onChange={formik.handleChange}
-                                                        error={formik.touched.vertical && Boolean(formik.errors.vertical)}
-                                                        helperText={formik.touched.vertical && formik.errors.vertical}
+                                                        error={formik.touched.vertical && Boolean(formik.errors.division)}
+                                                        helperText={formik.touched.vertical && formik.errors.division}
                                                 />
                                                 <SMUITextField
                                                         style={{width: '100%'}}
                                                         variant='outlined'
                                                         label='CTC Min'
-                                                        name='CTCMin'
-                                                        id='CTCMin'
-                                                        value={formik.values.CTCMin}
+                                                        name='ctcMin'
+                                                        id='ctcMin'
+                                                        value={formik.values.ctcMin}
                                                                         onChange={formik.handleChange}
-                                                                        error={formik.touched.CTCMin && Boolean(formik.errors.CTCMin)}
-                                                                        helperText={formik.touched.CTCMin && formik.errors.CTCMin}
+                                                                        error={formik.touched.ctcMin && Boolean(formik.errors.ctcMin)}
+                                                                        helperText={formik.touched.ctcMin && formik.errors.ctcMin}
                                                 />
                                                 <SMUITextField
                                                         style={{width: '100%'}}
                                                         variant='outlined'
                                                         label='CTC Max'
-                                                        name='CTCMax'
-                                                        id='CTCMax'
-                                                        value={formik.values.CTCMax}
+                                                        name='ctcMax'
+                                                        id='ctcMax'
+                                                        value={formik.values.ctcMax}
                                                                         onChange={formik.handleChange}
-                                                                        error={formik.touched.CTCMax && Boolean(formik.errors.CTCMax)}
-                                                                        helperText={formik.touched.CTCMax && formik.errors.CTCMax}
+                                                                        error={formik.touched.ctcMax && Boolean(formik.errors.ctcMax)}
+                                                                        helperText={formik.touched.ctcMax && formik.errors.ctcMax}
                                                 />
                                                 <SMUITextField
                                                         style={{width: '100%'}}
@@ -311,7 +354,6 @@ function NewJobInput() {
                                                         label='Shared with HR'
                                                         name='sharedToHRDate'
                                                         id='sharedToHRDate'
-                                                        type='date'
                                                         value={formik.values.sharedToHRDate}
                                                                         onChange={formik.handleChange}
                                                                         error={formik.touched.sharedToHRDate && Boolean(formik.errors.sharedToHRDate)}

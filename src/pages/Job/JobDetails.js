@@ -2,7 +2,7 @@ import axios from 'axios'
 import { get } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { jobEndpoint } from '../../api'
 import ArrowBG from '../../assets/icons/arrow.svg'
@@ -10,7 +10,7 @@ import Controls from '../../components/Controls'
 import DeleteModal from '../../components/Modals/DeleteModal'
 import PageTab from '../../components/PageTab'
 import Table from '../../components/Table'
-import { currentUserAtom, jobAtom, jobTab } from '../../recoil/atoms'
+import { currentUserAtom, jobAtom, jobTab, singlejobAtom } from '../../recoil/atoms'
 
 import {
 	Card,
@@ -42,7 +42,7 @@ function JobDetails({ match }) {
 	const id = match.params.id
 	const jobTabIndex = useRecoilValue(jobTab)
 	const labels = ['PipeLine', 'Applied Candidates', 'Job Details']
-	const [job, setJob] = useState()
+	const [job, setJob] = useRecoilState(singlejobAtom)
 	const jobFullData = useRecoilValue(jobAtom)
 	const currentUser = useRecoilValue(currentUserAtom)
 
