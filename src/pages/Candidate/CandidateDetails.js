@@ -11,6 +11,7 @@ import PageTab from '../../components/PageTab'
 import {
 	candidateAtom,
 	candidateCheckedAtom,
+	singleCandidateAtom,
 	candidateTab,
 	currentUserAtom,
 } from '../../recoil/atoms'
@@ -62,7 +63,7 @@ function CandidateDetails({ match }) {
 	}
 
 	const candidates = useRecoilValue(candidateAtom)
-	const [candidate, setCandidate] = useState()
+	const [candidate, setCandidate] = useRecoilState(candidateAtom)
 
 	const singleCandidate = candidates
 		? candidates.find((candidate) => candidate.candidateCode === id)

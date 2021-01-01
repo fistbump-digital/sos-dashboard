@@ -1,5 +1,5 @@
-import { IconButton } from '@material-ui/core'
-import { Delete } from '@material-ui/icons'
+import { IconButton, Tooltip } from '@material-ui/core'
+import { Delete, PlaylistAdd, Edit } from '@material-ui/icons'
 import axios from 'axios'
 import { get } from 'lodash'
 import React, { useEffect, useState } from 'react'
@@ -25,6 +25,7 @@ import {
 	TableHead,
 	TableRow,
 } from '../../styles'
+import AppliedJobsTable from './components/AppliedJobsTable'
 import CandidateInfo from './components/CandidateInfo'
 import NewCandidateInfo from './components/NewCandidateInfo'
 import DeleteModal from '../../components/Modals/DeleteModal'
@@ -119,12 +120,13 @@ function CandidateDetails({ match }) {
 				return <PipelineContainer>{renderPipeline}</PipelineContainer>
 			case 1:
 				return (
-					<>
-						{renderWithLoader(
-							candidate,
-							<Table headings={renderHeading}>{renderData}</Table>
-						)}
-					</>
+					// <>
+					// 	{renderWithLoader(
+					// 		candidate,
+					// 		<Table headings={renderHeading}>{renderData}</Table>
+					// 	)}
+					// </>
+					<AppliedJobsTable match={match} data={candidate} />
 				)
 
 			case 2:
@@ -138,25 +140,25 @@ function CandidateDetails({ match }) {
 		<>
 			<Controls title={candidate ? candidate.candidateName : 'Loading...'}>
 				{get(currentUser, 'roleId.permissions.candidate.delete') && (
-					<IconButton onClick={toggleModal} color='secondary'>
+					<Tooltip title='Delete'>
+						<IconButton onClick={toggleModal}>
 						<Delete />
 					</IconButton>
+					</Tooltip>
 				)}
 				{get(currentUser, 'roleId.permissions.candidate.update') && (
-					<ControlButton
-						onClick={assignHandler}
-						color='primary'
-						variant='contained'>
-						Assign
-					</ControlButton>
+					<Tooltip title='Assign to jobs'>
+						<IconButton onClick={assignHandler}>
+							<PlaylistAdd />
+						</IconButton>
+					</Tooltip>
 				)}
 				{get(currentUser, 'roleId.permissions.candidate.update') && (
-					<ControlButton
-						onClick={navHandler}
-						color='primary'
-						variant='contained'>
-						Edit
-					</ControlButton>
+					<Tooltip title='Edit Candidate'>
+						<IconButton>
+							<Edit />
+						</IconButton>
+					</Tooltip>
 				)}
 			</Controls>
 			<DeleteModal

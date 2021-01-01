@@ -90,6 +90,8 @@ function UserPage() {
 				return currentUser._id.toString() !== user._id.toString()
 			}
 		})
+
+		console.log(showUsers);
 	const renderUserData =
 		showUsers &&
 		showUsers.map(

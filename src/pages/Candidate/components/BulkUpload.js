@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 import axios from 'axios'
+import { useRecoilValue } from 'recoil'
+import { currentUserAtom } from '../../../recoil/atoms'
 import {Modal, Button, IconButton, Tooltip} from '@material-ui/core'
 import {
 	Card,
@@ -19,9 +21,9 @@ import { Close } from '@material-ui/icons'
 
 const BulkUpload = ({setBulkUpload, createBulk}) => {
 
-        console.log(createBulk)
-
+        const currentUser = useRecoilValue(currentUserAtom)
         const [selectedFile, setSelectedFile] = useState(null)
+
 
         const onFileChange = e => {
                 setSelectedFile(e.target.files[0])

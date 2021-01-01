@@ -57,14 +57,14 @@ function Sidebar() {
 				</MenuItem>
 			)}
 
-			{get(permissions, 'job.read') && (
+			{/* {get(permissions, 'job.read') && (
 				<MenuItem key={uniqueID()}>
 					<StyledNavlink activeStyle={activeLinkStyle} to='/company'>
 						<NavIcon src={CompanyIcon} />
 						Company
 					</StyledNavlink>
 				</MenuItem>
-			)}
+			)} */}
 
 			{get(permissions, 'role.read') && (
 				<MenuItem key={uniqueID()}>

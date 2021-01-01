@@ -14,6 +14,7 @@ export const deleteJobs = `${API_URI}/jobs`
 export const createCandidate = `${API_URI}/candidate`
 export const createBulkCandidate = `${API_URI}/candidateupload`
 export const getCandidates = `${API_URI}/candidates`
+export const getAppliedJobs = `${API_URI}/appliedjobs`
 
 export const applyJob = `${API_URI}/apply`
 

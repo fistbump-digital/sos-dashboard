@@ -5,7 +5,8 @@ import { v4 as uuid } from 'uuid'
 import { formatDate } from '../../../utils/helperFunctions'
 
 const NewJobInfo = ({data}) => {
-        const {jobCode, jobTitle, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttachmentLink} = data || {}
+	const {jobCode, jobTitle, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttachmentLink} = data || {}
+	
         return (
                 <Card>
                         <CategoryMainTitle>Job Info</CategoryMainTitle>

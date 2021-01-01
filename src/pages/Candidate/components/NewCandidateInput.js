@@ -105,7 +105,8 @@ const NewCandidateInput = () => {
                         commentTwo: '',
                         commentThree: '',
                         commentFour: '',
-                        commentFive: ''
+                        commentFive: '',
+                        source: currentUser._id
                 },
                 validationSchema: formValidation,
                 onSubmit: (values, {resetForm}) => {
@@ -118,6 +119,8 @@ const NewCandidateInput = () => {
                                 setLoading(false)
                                 toast.success('New Candidate Added')
                                 resetForm({values: ''})
+
+                                console.log(data)
                         })
                         .catch(err => {
                                 setLoading(false)

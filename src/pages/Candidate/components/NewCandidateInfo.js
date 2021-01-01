@@ -30,8 +30,7 @@ function CandidateInfo({ data }) {
 	  commentThree,
 	  commentFour,
 	  commentFive
-        } = data || {};
-        console.log(data)
+	} = data || {};
 
 	return (
 		<Card>

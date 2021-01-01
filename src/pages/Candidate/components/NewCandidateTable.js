@@ -218,7 +218,7 @@ const EnhancedTableToolbar = (props) => {
         </Tooltip>
       ) : (
         <>
-        {get(currentUser, 'roleId.permissions.job.create') && (
+        {get(currentUser, 'roleId.permissions.candidate.create') && (
 							<Tooltip title="Add Job">
               <IconButton aria-label="add job" onClick={() => history.push(`${location}/add`)}>
                 <AddIcon />

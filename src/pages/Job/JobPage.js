@@ -105,26 +105,25 @@ function JobPage({ toApply }) {
 		}
 	}
 
-	const candidateApplyHandler = async () => {
-		try {
-			await axios.post(
-				applyJob,
-				{
-					candidates: candidateSelectedIds,
-					jobs: ids,
-					userId: currentUser._id,
-				},
-				{ withCredentials: true }
-			)
-			setChecked({})
-			setCandidateChecked({})
-			history.goBack()
-			toast.success('Candidates Assigned')
-		} catch (err) {
-			toast.error('Something went wrong')
-		}
-	}
-
+	// const candidateApplyHandler = async () => {
+	// 	try {
+	// 		await axios.post(
+	// 			applyJob,
+	// 			{
+	// 				candidates: candidateSelectedIds,
+	// 				jobs: ids,
+	// 				userId: currentUser._id,
+	// 			},
+	// 			{ withCredentials: true }
+	// 		)
+	// 		setChecked({})
+	// 		setCandidateChecked({})
+	// 		history.goBack()
+	// 		toast.success('Candidates Assigned')
+	// 	} catch (err) {
+	// 		toast.error('Something went wrong')
+	// 	}
+	// }
 	// Renderers
 	const renderJobHeading = jobHeading.map((heading) => (
 		<TableHead key={uuid()}>{heading}</TableHead>

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import clsx from 'clsx';
 import { filter, get } from 'lodash'
 import { NavLink, useHistory, useLocation } from 'react-router-dom'
 import { lighten, makeStyles } from '@material-ui/core/styles';
-
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { currentUserAtom } from '../../../recoil/atoms'
-
+import { currentUserAtom, candidateAtom } from '../../../recoil/atoms'
 import { CSVLink, CSVDownload } from "react-csv";
+import { toast } from '../../../components/Toast'
+
+import {deleteJobs, applyJob} from '../../../api'
 
 import {
   Table,
@@ -34,6 +36,7 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import Search from '../../../components/Search'
 
@@ -165,7 +168,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, jobData, setFilterData, rows } = props;
+  const { numSelected, jobData, setFilterData, rows, handleDeleteClick, toApply, candidateApplyHandler } = props;
   const currentUser = useRecoilValue(currentUserAtom)
   const history = useHistory()
   const location = useLocation().pathname
@@ -184,7 +187,9 @@ const EnhancedTableToolbar = (props) => {
       data.industry.toLowerCase().includes(inputVal)
 		});
 		setFilterData(filterData);
-	}
+  }
+
+  
 
   return (
     <>
@@ -210,11 +215,22 @@ const EnhancedTableToolbar = (props) => {
 
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon onClick={() => console.log('delete button click')} />
-          </IconButton>
-        </Tooltip>
+        <>
+          {
+            toApply ? 
+            <Tooltip title="Apply">
+              <IconButton aria-label="delete">
+                <CheckCircleOutlineIcon onClick={() => candidateApplyHandler()} />
+              </IconButton>
+            </Tooltip>
+            :
+            <Tooltip title="Delete">
+              <IconButton aria-label="delete">
+                <DeleteIcon onClick={() => handleDeleteClick()} />
+              </IconButton>
+            </Tooltip>
+          }
+        </>
       ) : (
         <>
         {get(currentUser, 'roleId.permissions.job.create') && (
@@ -267,8 +283,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// main function
+
 export default function EnhancedTable({filterData,setFilterData, jobData, toApply}) {
   const classes = useStyles();
+  const history = useHistory()
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('postedOn');
   const [selected, setSelected] = React.useState([]);
@@ -276,6 +295,34 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const location = useLocation().pathname
   const rows = [];
+  const currentCandidate = useRecoilValue(candidateAtom)
+
+  const handleDeleteClick = () => {
+    axios.patch(deleteJobs, {selected}, {withCredentials: true})
+    .then(data => {
+      setSelected({})
+      alert('jobs deleted')
+    })
+    .catch(err => {
+      alert(err.message)
+    })
+  }
+
+  const candidateApplyHandler = async () => {
+      axios.post(applyJob, {
+        candidate: currentCandidate,
+        jobIds: selected
+      }, {withCredentials: true})
+      .then(data => {
+        toast.success('Jobs assigned successfully!')
+        setSelected([])
+        history.goBack()
+      })
+      .catch(err => {
+        toast.error(`Error: ${err.message}`)
+      })
+	}
+
 
   filterData.map(job => {
     const {jobCode, jobTitle, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttachmentLink} = job
@@ -337,7 +384,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} jobData={jobData} setFilterData={setFilterData} rows={rows} />
+        <EnhancedTableToolbar numSelected={selected.length} jobData={jobData} setFilterData={setFilterData} rows={rows} handleDeleteClick={handleDeleteClick} toApply={toApply} candidateApplyHandler={candidateApplyHandler} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -360,11 +407,12 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.code);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => {handleClick(event, row.code)}}
+                      onClick={(event) => {
+                        handleClick(event, row.code); 
+                      }}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

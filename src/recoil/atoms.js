@@ -16,6 +16,11 @@ export const candidateAtom = atom({
 	default: null,
 })
 
+export const singleCandidateAtom = atom({
+	key: 'singleCandidate',
+	default: null
+})
+
 export const companyAtom = atom({
 	key: 'companies',
 	default: null,
