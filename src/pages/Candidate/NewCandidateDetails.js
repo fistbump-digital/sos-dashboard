@@ -99,35 +99,67 @@ function CandidateDetails({ match }) {
 		)
 	})
 
-	const stageDataCount = counter(
-		get(candidate, 'statusIds', []).map(
-			(statusId) => statusId.currentStage.stageName
-		)
-	)
+	// const stageDataCount = counter(
+	// 	get(candidate, 'statusIds', []).map(
+	// 		(statusId) => statusId.currentStage.stageName
+	// 	)
+	// ) 
+
 
 	const renderPipeline = stages.map((stage) => {
 		return (
 			<PipelineCard key={uuid()}>
-				<PipelineStat>{get(stageDataCount, stage, 0)}</PipelineStat>
-				<PipelineTitle>{stage}</PipelineTitle>
+				<PipelineStat></PipelineStat>
+				<PipelineTitle>{stage.name}</PipelineTitle>
 			</PipelineCard>
 		)
 	})
 
+	console.log(candidate)
+
 	const renderTabBody = (index) => {
 		switch (index) {
 			case 0:
-				return <PipelineContainer>{renderPipeline}</PipelineContainer>
-			case 1:
+				// return <PipelineContainer>{renderPipeline}</PipelineContainer>
 				return (
-					// <>
-					// 	{renderWithLoader(
-					// 		candidate,
-					// 		<Table headings={renderHeading}>{renderData}</Table>
-					// 	)}
-					// </>
-					<AppliedJobsTable match={match} data={candidate} />
+					<PipelineContainer>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{candidate.jobs.shortlisted.length}</PipelineStat>
+							<PipelineTitle>Shortlisted</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{candidate.jobs.assessment.length}</PipelineStat>
+							<PipelineTitle>Assessment</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{candidate.jobs.hiringManagerReview.length}</PipelineStat>
+							<PipelineTitle>Hiring Manager Review</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{candidate.jobs.interview.length}</PipelineStat>
+							<PipelineTitle>Interview</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{candidate.jobs.salaryFitment.length}</PipelineStat>
+							<PipelineTitle>Salary Fitment</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{candidate.jobs.offer.length}</PipelineStat>
+							<PipelineTitle>Offer</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{candidate.jobs.documentation.length}</PipelineStat>
+							<PipelineTitle>Documentation</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{candidate.jobs.joining.length}</PipelineStat>
+							<PipelineTitle>Joining</PipelineTitle>
+						</PipelineCard>
+					</PipelineContainer>
 				)
+			case 1:
+				return <AppliedJobsTable match={match} data= {candidate} />
+				
 
 			case 2:
 				return <NewCandidateInfo data={candidate} />
