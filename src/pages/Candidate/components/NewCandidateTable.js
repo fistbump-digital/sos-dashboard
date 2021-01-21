@@ -37,8 +37,8 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 
 import Search from '../../../components/Search'
 
-function createData(code, candidateName, resumeTitle, contactNumber, email, workExp, annualSalary, currentLocation, preferredLocation, currentEmployer, designation, UGCourse, PGCourse, PostPGCourse, DOB, postalAddress, resumeID, LastActive, commentOne, commentTwo, commentThree, commentFour, commentFive) {
-  return { code, candidateName, resumeTitle, contactNumber, email, workExp, annualSalary, currentLocation, preferredLocation, currentEmployer, designation, UGCourse, PGCourse, PostPGCourse, DOB, postalAddress, resumeID, LastActive, commentOne, commentTwo, commentThree, commentFour, commentFive};
+function createData(code, candidateName, contactNumber, email, annualSalary, currentLocation, currentEmployer) {
+  return { code, candidateName, contactNumber, email, annualSalary, currentLocation, currentEmployer};
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -69,27 +69,11 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'candidateName', numeric: false, disablePadding: true, label: 'candidate name' },
-  { id: 'resumeTitle', numeric: false, disablePadding: true, label: 'resume title' },
   { id: 'contactNumber', numeric: false, disablePadding: true, label: 'contact no' },
   { id: 'email', numeric: false, disablePadding: true, label: 'email' },
-  { id: 'workExp', numeric: false, disablePadding: true, label: 'work exp' },
-  { id: 'annualSalary', numeric: false, disablePadding: true, label: 'annual salary' },
-  { id: 'currentLocation', numeric: false, disablePadding: true, label: 'current location' },
-  { id: 'preferredLocation', numeric: false, disablePadding: true, label: 'preferred location' },
-  { id: 'currentEmployer', numeric: false, disablePadding: true, label: 'current employer' },
-  { id: 'designation', numeric: false, disablePadding: true, label: 'designation' },
-  { id: 'UGCourse', numeric: false, disablePadding: true, label: 'u.g. course' },
-  { id: 'PGCourse', numeric: false, disablePadding: true, label: 'p.g. course' },
-  { id: 'postPGCourse', numeric: false, disablePadding: true, label: 'post p.g. course' },
-  { id: 'DOB', numeric: false, disablePadding: true, label: 'age/DOB' },
-  { id: 'postalAddress', numeric: false, disablePadding: true, label: 'postal address' },
-  { id: 'resumeId', numeric: false, disablePadding: true, label: 'resume id'},
-  { id: 'lastActiveDate', numeric: false, disablePadding: true, label: 'Last Active' },
-  { id: 'commentOne', numeric: false, disablePadding: true, label: 'comment 1' },
-  { id: 'commentTwo', numeric: false, disablePadding: true, label: 'comment 2' },
-  { id: 'commentThree', numeric: false, disablePadding: true, label: 'comment 3' },
-  { id: 'commentFour', numeric: false, disablePadding: true, label: 'comment 4' },
-  { id: 'commentFive', numeric: false, disablePadding: true, label: 'comment 5' },
+  { id: 'annualSalary', numeric: false, disablePadding: true, label: 'CTC' },
+  { id: 'currentLocation', numeric: false, disablePadding: true, label: 'location' },
+  { id: 'currentEmployer', numeric: false, disablePadding: true, label: 'current company' },
 ];
 
 
@@ -180,8 +164,6 @@ const EnhancedTableToolbar = (props) => {
                         return data['candidateName'].toLowerCase().includes(inputVal) ||
                                 data['email'].toLowerCase().includes(inputVal) ||
                                 data['currentLocation'].toLowerCase().includes(inputVal) ||
-                                data['preferredLocation'].toLowerCase().includes(inputVal) ||
-                                data['designation'].toLowerCase().includes(inputVal) ||
                                 data['currentEmployer'].toLowerCase().includes(inputVal)
 		});
 		setFilterData(filterData);
@@ -280,7 +262,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
 
   filterData.map(candidate => {
         rows.push(
-                createData(candidate._id, candidate['candidateName'], candidate['resumeTitle'], candidate['contactNo'], candidate['email'], candidate['workExp'], candidate['annualSalary'], candidate['currentLocation'], candidate['preferredLocation'], candidate['currentEmployer'], candidate['designation'], candidate['UGCourse'], candidate['PGCourse'], candidate['postPGCourse'], candidate['DOB'], candidate['postalAddress'], candidate['resumeId'],  candidate['lastActiveDate'], candidate['commentOne'], candidate['commentOne'], candidate['commentTwo'], candidate['commentThree'],  candidate['commentFour'], candidate['commentFive'])
+                createData(candidate._id, candidate['candidateName'], candidate['contactNo'], candidate['email'], candidate['annualSalary'], candidate['currentLocation'], candidate['currentEmployer'])
         );
         // console.log(rows)
   })
@@ -360,7 +342,6 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.code);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow
                       hover
@@ -377,55 +358,31 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" style={{minWidth: 180}}>
+                      <TableCell component="th" id={labelId} scope="row" style={{minWidth: 160}}>
                       {toApply ? (
                           row.candidateName
                         ) : (
-                          <NavLink to={`${location}/${row.resumeID}`}>
+                          <NavLink to={`${location}/${row.code}`}>
                             {row.candidateName}
                           </NavLink>
                         )}
-
                       </TableCell>
-                      <TableCell style={{minWidth: 300}}>{row.resumeTitle}</TableCell>
-                      <TableCell style={{minWidth: 150}}>
+                      <TableCell style={{minWidth: 130}}>
                               <a href={"tel:"+row.contactNumber}>{row.contactNumber}</a>
                         </TableCell>
                       <TableCell>
                               <a href={"mailto:"+row.email} target="_blank">{row.email}</a>
                         </TableCell>
-                      <TableCell style={{minWidth: 120}}>{row.workExp}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.annualSalary}</TableCell>
-                      <TableCell style={{minWidth: 180}}>{row.currentLocation}</TableCell>
-                      <TableCell style={{minWidth: 200}}>{row.preferredLocation}</TableCell>
+                      <TableCell style={{minWidth: 120}}>{row.annualSalary}</TableCell>
+                      <TableCell style={{minWidth: 110}}>{row.currentLocation}</TableCell>
                       <TableCell style={{minWidth: 180}}>{row.currentEmployer}</TableCell>
                       <TableCell>{row.designation}</TableCell>
-                      <TableCell style={{minWidth: 130}}>{row.UGCourse}</TableCell>
-                      <TableCell style={{minWidth: 120}}>{row.PGCourse}</TableCell>
-                      <TableCell style={{minWidth: 170}}>{row.PostPGCourse}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.DOB}</TableCell>
-                      <TableCell style={{minWidth: 200}}>{row.postalAddress}</TableCell>
-                      <TableCell>
-                                {toApply ? (
-                                        row.code
-                                        ) : (
-                                        <NavLink to={`${location}/${row.resumeID}`}>
-                                        {row.resumeID}
-                                        </NavLink>
-                                )}
-                      </TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.LastActive}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.commentOne}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.commentTwo}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.commentThree}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.commentFour}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.commentFive}</TableCell>
                     </TableRow>
                   );
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={23} />
+                  <TableCell colSpan={6} />
                 </TableRow>
               )}
             </TableBody>

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
+import {Link} from 'react-router-dom'
 import { candidateEndpoint, statusEndpoint } from '../../../api'
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, IconButton, Tooltip, Select, MenuItem, FormControl, InputLabel} from '@material-ui/core'
 import {formatDate, renderWithLoader, titleGenerator} from '../../../utils/helperFunctions'
@@ -7,12 +8,15 @@ import { toast } from '../../../components/Toast'
 import EditIcon from '@material-ui/icons/Edit'
 import CloseIcon from '@material-ui/icons/Close'
 import DoneIcon from '@material-ui/icons/Done'
+import LoopIcon from '@material-ui/icons/Loop'
+import TableSkeletonLoader from '../../../components/TableSkeletonLoader'
 
 const AppliedJobsTable = ({match}) => {
         const id = match.params.id
         const [isEdit, setIsEdit] = useState({
                 status: false,
-                rowKey: null
+                rowKey: null,
+                loading: false
         })
         const [newCandidateStatusValue, setNewCandidateStatusValue] = useState()
         const [data, setData] = useState()
@@ -20,7 +24,8 @@ const AppliedJobsTable = ({match}) => {
         const editHandler = (row, i) => {
                 setIsEdit({
                         status: true,
-                        rowKey: i
+                        rowKey: i,
+                        loading: false
                 })
         }
 
@@ -29,7 +34,11 @@ const AppliedJobsTable = ({match}) => {
         }
 
         const editSave = (row, i) => {
-
+                setIsEdit({
+                        status: true,
+                        rowKey: i,
+                        loading: true
+                })
                 axios.patch(`${statusEndpoint}/${id}`, {newCandidateStatusValue, row, data}, { withCredentials: true })
                 .then(data => {
                         toast.success(data.data)
@@ -39,7 +48,7 @@ const AppliedJobsTable = ({match}) => {
                                 setData(data.data)
                                 console.log(data)
                                 })
-                        .catch(err => console.log(err))
+                        .catch(err => {console.log(err)})
                 })
                 .catch(err => {
                         toast.error(`Error: ${err.message}`)
@@ -65,7 +74,6 @@ const AppliedJobsTable = ({match}) => {
         const documentationJobs = data ? data.jobs.documentation : {}
         const joiningJobs = data ? data.jobs.joining : {}
         const jobs = data ? shortlistedJobs.concat(assessmentJobs, hiringManagerReviewJobs, interviewJobs, salaryFitmentJobs, offerJobs, documentationJobs, joiningJobs) : null
-
 
         const candidateId  = data ?  data._id : ''
         var candidateStatus = ''
@@ -97,13 +105,13 @@ const AppliedJobsTable = ({match}) => {
         
 
         const rows = []
-        const heads = ['Job Code', 'Job Title', 'candidate status', 'No. of Applicants', 'State', 'District', 'Zone', 'Status', 'No. of Openings', 'Start Date', 'Close Date', 'Industry', 'Company', 'Vertical', 'Division', 'CTC Min', 'CTC Max', 'No. of CVs Shared', 'Shared with HR', 'JD Attachment', `Edit Candidate's Job Status`]
+        const heads = ['Job Code', 'Job Title', 'candidate status', 'Applicants', 'State', 'Zone', `Edit Status`]
 
         const createData = (code, title, candidateStatus, applicants, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttactmentLink) => {
                 return { code, title, candidateStatus, applicants, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttactmentLink };
         }
         if(data) {
-                jobs.map((job, i) => {
+                jobs.map( (job, i) => {
                         const {jobCode, jobTitle, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttachmentLink} = job
                         cStatus(job)
                         applicantsNumber(job)
@@ -115,7 +123,10 @@ const AppliedJobsTable = ({match}) => {
 
 
         return (
-                <TableContainer component={Paper} elevation={1} square>
+                <>
+                {
+                        data ? 
+                        <TableContainer component={Paper} elevation={1} square>
                         <Table aria-label="Applied Jobs Table">
                                 <TableHead>
                                         <TableRow>
@@ -132,7 +143,9 @@ const AppliedJobsTable = ({match}) => {
                                                         const {code, title, state, district, zone, status, noOfOpening, startDate, closeDate, industry, company, vertical, division, ctcMin, ctcMax, CVShared, sharedToHRDate, JDAttactmentLink, candidateStatus, applicants} = row
                                                         return (
                                                                 <TableRow key={i}>
-                                                                        <TableCell component="th" scope="row">{code}</TableCell>
+                                                                        <TableCell component="th" scope="row">
+                                                                                <Link to={`/job/${code}`}>{code}</Link>
+                                                                        </TableCell>
                                                                         <TableCell>{title}</TableCell>
                                                                         {
                                                                                 isEdit.status && isEdit.rowKey === i ?
@@ -152,26 +165,18 @@ const AppliedJobsTable = ({match}) => {
                                                                                         </FormControl>
                                                                                 </TableCell>
                                                                                 :
-                                                                                <TableCell>{candidateStatus}</TableCell>
+                                                                                <TableCell align='left'>{candidateStatus}</TableCell>
                                                                         }
-                                                                        <TableCell>{applicants}</TableCell>
+                                                                        <TableCell align='center'>{applicants}</TableCell>
                                                                         <TableCell>{state}</TableCell>
-                                                                        <TableCell>{district}</TableCell>
                                                                         <TableCell>{zone}</TableCell>
-                                                                        <TableCell>{status}</TableCell>
-                                                                        <TableCell>{noOfOpening}</TableCell>
-                                                                        <TableCell>{formatDate(startDate)}</TableCell>
-                                                                        <TableCell>{formatDate(closeDate)}</TableCell>
-                                                                        <TableCell>{industry}</TableCell>
-                                                                        <TableCell>{company}</TableCell>
-                                                                        <TableCell>{vertical}</TableCell>
-                                                                        <TableCell>{division}</TableCell>
-                                                                        <TableCell>{ctcMin}</TableCell>
-                                                                        <TableCell>{ctcMax}</TableCell>
-                                                                        <TableCell>{CVShared}</TableCell>
-                                                                        <TableCell>{sharedToHRDate}</TableCell>
-                                                                        <TableCell align="center"><a href={`${JDAttactmentLink}`}>Link</a></TableCell>
                                                                         {
+                                                                                isEdit.status && isEdit.rowKey === i && isEdit.loading ?
+                                                                                <TableCell align='center'>
+                                                                                        <IconButton>
+                                                                                                <LoopIcon />
+                                                                                        </IconButton>
+                                                                                </TableCell> :
                                                                                 isEdit.status && isEdit.rowKey === i ? 
                                                                                 <TableCell>
                                                                                         <Tooltip title='Close'>
@@ -201,6 +206,10 @@ const AppliedJobsTable = ({match}) => {
                                 </TableBody>
                         </Table>
                 </TableContainer>
+                :
+                <TableSkeletonLoader />
+                }
+                </>
         )
 }
 
@@ -209,5 +218,4 @@ export default AppliedJobsTable
 const tableHeadStyle = {
         textTransform: 'uppercase',
         fontWeight: 'bold',
-        minWidth: 140
 }

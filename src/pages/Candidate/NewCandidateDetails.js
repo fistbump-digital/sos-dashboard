@@ -74,7 +74,7 @@ function CandidateDetails({ match }) {
 			.catch((e) => console.log(e))
 	}, [])
 
-	const navHandler = () => {
+	const editNavHandler = () => {
 		history.push(`/candidate/edit/${id}`)
 	}
 
@@ -122,6 +122,7 @@ function CandidateDetails({ match }) {
 			case 0:
 				// return <PipelineContainer>{renderPipeline}</PipelineContainer>
 				return (
+					candidate.jobs ? 
 					<PipelineContainer>
 						<PipelineCard key={uuid()}>
 							<PipelineStat>{candidate.jobs.shortlisted.length}</PipelineStat>
@@ -156,6 +157,7 @@ function CandidateDetails({ match }) {
 							<PipelineTitle>Joining</PipelineTitle>
 						</PipelineCard>
 					</PipelineContainer>
+					: null
 				)
 			case 1:
 				return <AppliedJobsTable match={match} data= {candidate} />
@@ -187,7 +189,7 @@ function CandidateDetails({ match }) {
 				)}
 				{get(currentUser, 'roleId.permissions.candidate.update') && (
 					<Tooltip title='Edit Candidate'>
-						<IconButton>
+						<IconButton onClick={editNavHandler}>
 							<Edit />
 						</IconButton>
 					</Tooltip>

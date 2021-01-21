@@ -74,21 +74,21 @@ const headCells = [
   { id: 'jobCode', numeric: false, disablePadding: true, label: 'job code' },
   { id: 'jobTitle', numeric: false, disablePadding: true, label: 'job title' },
   { id: 'state', numeric: false, disablePadding: true, label: 'state' },
-  { id: 'district', numeric: false, disablePadding: true, label: 'district' },
+  // { id: 'district', numeric: false, disablePadding: true, label: 'district' },
   { id: 'zone', numeric: false, disablePadding: true, label: 'zone' },
   { id: 'status', numeric: false, disablePadding: true, label: 'status' },
-  { id: 'noOfOpening', numeric: false, disablePadding: true, label: 'no of opening' },
-  { id: 'startDate', numeric: false, disablePadding: true, label: 'start date' },
-  { id: 'closeDate', numeric: false, disablePadding: true, label: 'close date' },
-  { id: 'industry', numeric: false, disablePadding: true, label: 'industry' },
-  { id: 'company', numeric: false, disablePadding: true, label: 'company' },
-  { id: 'vertical', numeric: false, disablePadding: true, label: 'vertical' },
-  { id: 'division', numeric: false, disablePadding: true, label: 'division' },
-  { id: 'ctcMin', numeric: false, disablePadding: true, label: 'CTC Min' },
-  { id: 'ctcMax', numeric: false, disablePadding: true, label: 'CTC Max' },
-  { id: 'CVShared', numeric: false, disablePadding: true, label: 'No. of cvs shared' },
-  { id: 'sharedToHRDate', numeric: false, disablePadding: true, label: 'shared with hr date' },
-  { id: 'JDAttachmentLink', numeric: false, disablePadding: true, label: 'jd attachment' },
+  { id: 'noOfOpening', numeric: false, disablePadding: true, label: 'openings' },
+  // { id: 'startDate', numeric: false, disablePadding: true, label: 'start date' },
+  // { id: 'closeDate', numeric: false, disablePadding: true, label: 'close date' },
+  // { id: 'industry', numeric: false, disablePadding: true, label: 'industry' },
+  // { id: 'company', numeric: false, disablePadding: true, label: 'company' },
+  // { id: 'vertical', numeric: false, disablePadding: true, label: 'vertical' },
+  // { id: 'division', numeric: false, disablePadding: true, label: 'division' },
+  // { id: 'ctcMin', numeric: false, disablePadding: true, label: 'CTC Min' },
+  // { id: 'ctcMax', numeric: false, disablePadding: true, label: 'CTC Max' },
+  // { id: 'CVShared', numeric: false, disablePadding: true, label: 'No. of cvs shared' },
+  // { id: 'sharedToHRDate', numeric: false, disablePadding: true, label: 'shared with hr date' },
+  { id: 'JDAttachmentLink', numeric: false, disablePadding: true, label: 'jd Link' },
 ];
 
 
@@ -425,7 +425,7 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" style={{minWidth: 120}}>
+                      <TableCell component="th" id={labelId} scope="row" style={{minWidth: 110}}>
                       {toApply ? (
                           row.code
                         ) : (
@@ -436,22 +436,22 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
 
                       </TableCell>
                       <TableCell style={{minWidth: 200}}>{row.title}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.state}</TableCell>
-                      <TableCell style={{minWidth: 120}}>{row.district}</TableCell>
+                      <TableCell style={{minWidth: 140}}>{row.state}</TableCell>
+                      {/* <TableCell style={{minWidth: 120}}>{row.district}</TableCell> */}
                       <TableCell>{row.zone}</TableCell>
                       <TableCell>{row.status}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.noOfOpening}</TableCell>
-                      <TableCell style={{minWidth: 140}}>{formatDate(row.startDate)}</TableCell>
-                      <TableCell style={{minWidth: 140}}>{formatDate(row.closeDate)}</TableCell>
-                      <TableCell style={{minWidth: 120}}>{row.industry}</TableCell>
-                      <TableCell>{row.company}</TableCell>
-                      <TableCell style={{minWidth: 150}}>{row.vertical}</TableCell>
-                      <TableCell>{row.division}</TableCell>
-                      <TableCell style={{minWidth: 120}}>{row.ctcMin}</TableCell>
-                      <TableCell style={{minWidth: 120}}>{row.ctcMax}</TableCell>
-                      <TableCell style={{minWidth: 180}}>{row.CVShared}</TableCell>
-                      <TableCell style={{minWidth: 200}}>{row.sharedToHRDate}</TableCell>
-                      <TableCell style={{minWidth: 200}}><a href={row.JDAttactmentLink} target='_blank'>Link</a></TableCell>
+                      <TableCell style={{minWidth: 80}}>{row.noOfOpening}</TableCell>
+                      {/* <TableCell style={{minWidth: 140}}>{formatDate(row.startDate)}</TableCell> */}
+                      {/* <TableCell style={{minWidth: 140}}>{formatDate(row.closeDate)}</TableCell> */}
+                      {/* <TableCell style={{minWidth: 120}}>{row.industry}</TableCell> */}
+                      {/* <TableCell>{row.company}</TableCell> */}
+                      {/* <TableCell style={{minWidth: 150}}>{row.vertical}</TableCell> */}
+                      {/* <TableCell>{row.division}</TableCell> */}
+                      {/* <TableCell style={{minWidth: 120}}>{row.ctcMin}</TableCell> */}
+                      {/* <TableCell style={{minWidth: 120}}>{row.ctcMax}</TableCell> */}
+                      {/* <TableCell style={{minWidth: 180}}>{row.CVShared}</TableCell> */}
+                      {/* <TableCell style={{minWidth: 200}}>{row.sharedToHRDate}</TableCell> */}
+                      <TableCell style={{minWidth: 100}}><a href={row.JDAttactmentLink} target='_blank'>Link</a></TableCell>
                     </TableRow>
                   );
                 })}

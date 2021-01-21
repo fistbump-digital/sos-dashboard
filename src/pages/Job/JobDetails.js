@@ -35,6 +35,7 @@ import { v4 as uuid } from 'uuid'
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import NewJobInfo from './components/NewJobInfo'
+import AppliedCandidatesTable from './components/AppliedCandidatesTable'
 
 
 function JobDetails({ match }) {
@@ -139,18 +140,46 @@ function JobDetails({ match }) {
 	const renderTabBody = (index) => {
 		switch (index) {
 			case 0:
-				return <PipelineContainer>{renderPipeline}</PipelineContainer>
-			case 1:
 				return (
-					<>
-						{renderWithLoader(
-							candidateData,
-							<Table headings={renderCandidateHeading}>
-								{renderCandidateData}
-							</Table>
-						)}
-					</>
+					job ? 
+					<PipelineContainer>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{job.candidates.shortlisted.length}</PipelineStat>
+							<PipelineTitle>Shortlisted</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{job.candidates.assessment.length}</PipelineStat>
+							<PipelineTitle>Assessment</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{job.candidates.hiringManagerReview.length}</PipelineStat>
+							<PipelineTitle>Hiring Manager Review</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{job.candidates.interview.length}</PipelineStat>
+							<PipelineTitle>Interview</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{job.candidates.salaryFitment.length}</PipelineStat>
+							<PipelineTitle>Salary Fitment</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{job.candidates.offer.length}</PipelineStat>
+							<PipelineTitle>Offer</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{job.candidates.documentation.length}</PipelineStat>
+							<PipelineTitle>Documentation</PipelineTitle>
+						</PipelineCard>
+						<PipelineCard key={uuid()}>
+							<PipelineStat>{job.candidates.joining.length}</PipelineStat>
+							<PipelineTitle>Joining</PipelineTitle>
+						</PipelineCard>
+					</PipelineContainer>
+					: null
 				)
+			case 1:
+				return <AppliedCandidatesTable match={match} data={job} />
 
 			case 2:
 				// return <JobInfo job={selectedJob} />

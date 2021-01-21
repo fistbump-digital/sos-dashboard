@@ -16,7 +16,7 @@ function DashboardPage() {
 		axios
 			.get(statsEndpoint, { withCredentials: true })
 			.then(({ data }) => setStats(data))
-			.catch((e) => toast.error('Something went wrong'))
+			.catch((e) => toast.error(`Error: ${e.message}`))
 	}, [])
 
 	console.log({ stats })

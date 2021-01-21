@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import axios from 'axios'
 import { useRecoilValue } from 'recoil'
 import { currentUserAtom } from '../../../recoil/atoms'
-import {Modal, Button, IconButton, Tooltip} from '@material-ui/core'
+import {Modal, Button, IconButton, Tooltip, Grid, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core'
 import {
 	Card,
 	CardTitle,
@@ -19,10 +19,11 @@ import { toast } from '../../../components/Toast'
 import CloseIcon from '@material-ui/icons/Close';
 import { Close } from '@material-ui/icons'
 
-const BulkUpload = ({setBulkUpload, createBulk}) => {
+const BulkUpload = ({setBulkUpload, createBulk, candidate}) => {
 
         const currentUser = useRecoilValue(currentUserAtom)
         const [selectedFile, setSelectedFile] = useState(null)
+        const [source, setSource] = useState('')
 
 
         const onFileChange = e => {
@@ -45,7 +46,7 @@ const BulkUpload = ({setBulkUpload, createBulk}) => {
 
                         axios({
                                 method: 'post',
-                                url: createBulk,
+                                url: candidate ? `${createBulk}/${source}` : `${createBulk}`,
                                 data: formData,
                                 withCredentials: true,
                                 headers: {'Content-Type': 'multipart/form-data'}
@@ -90,8 +91,31 @@ const BulkUpload = ({setBulkUpload, createBulk}) => {
                                 </Tooltip>
                         </div>
                       <h2>Bulk Upload</h2>
-                      <input type = 'file' onChange = {onFileChange} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
-                      <Button onClick={onFileUpload} variant='contained' color='primary'>Upload!</Button>
+                      <Grid container spacing={2}>
+                              <Grid item xs={12} md={12}>
+                                <input type = 'file' onChange = {onFileChange} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+                              </Grid>
+                               {
+                                       candidate ? (
+                                        <Grid item xs={12} md={12}>
+                                                <FormControl style={{minWidth: '25%'}} variant="outlined">
+                                                        <InputLabel>Select source</InputLabel>
+                                                        <Select style={{textAlign: 'left'}}
+                                                        value={source}
+                                                        onChange={(e) => {setSource(e.target.value)}}
+                                                        >
+                                                                <MenuItem value=''>None</MenuItem>
+                                                                <MenuItem value='naukri'>Naukri</MenuItem>
+                                                                <MenuItem value='shine'>Shine</MenuItem>
+                                                        </Select>
+                                                </FormControl>
+                                        </Grid> 
+                                       ) : null
+                               }
+                              <Grid item xs={12} md={12}>
+                                <Button onClick={onFileUpload} variant='contained' color='primary'>Upload!</Button>
+                              </Grid>
+                      </Grid>                     
                       {fileData()}
                 </Card>
                 </ContentContainer>
