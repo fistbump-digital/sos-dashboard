@@ -51,8 +51,8 @@ const BulkUpload = ({setBulkUpload, createBulk, candidate}) => {
                                 withCredentials: true,
                                 headers: {'Content-Type': 'multipart/form-data'}
                         })
-                        .then(() => {
-                                toast.success('Data Uploaded Successfully')
+                        .then((data) => {
+                                toast.success(data.data)
                                 setSelectedFile(null)
                                 setBulkUpload(false)
                         })

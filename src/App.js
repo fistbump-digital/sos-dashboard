@@ -28,6 +28,7 @@ import { verifyEndpoint } from './api'
 import AppliedCandidate from './pages/Candidate/AppliedCandidate'
 import EditCandidate from './pages/Candidate/EditCandidate'
 import Loader from './components/Loader'
+import Logs from './components/Logs'
 
 function App() {
 	const [isAuth, setAuth] = useRecoilState(isAuthAtom)
@@ -56,6 +57,7 @@ function App() {
 			<Route path='/job/edit/:id' component={EditJob} />
 			<Route path='/job/:id' component={JobDetails} />
 			<Route path='/job' component={JobPage} />
+			<Route path='/logs' component={Logs} />
 
 			<Route path='/candidate/add' component={AddCandidate} />
 			<Route path='/candidate/edit/:id' component={EditCandidate} />

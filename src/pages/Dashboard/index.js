@@ -14,7 +14,7 @@ function DashboardPage() {
 	const [stats, setStats] = useRecoilState(statsAtom)
 	useEffect(() => {
 		axios
-			.get(statsEndpoint, { withCredentials: true })
+			.get(`${statsEndpoint}/`, { withCredentials: true })
 			.then(({ data }) => setStats(data))
 			.catch((e) => toast.error(`Error: ${e.message}`))
 	}, [])

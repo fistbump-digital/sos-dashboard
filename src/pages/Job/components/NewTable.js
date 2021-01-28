@@ -10,7 +10,7 @@ import { currentUserAtom, candidateAtom } from '../../../recoil/atoms'
 import { CSVLink, CSVDownload } from "react-csv";
 import { toast } from '../../../components/Toast'
 
-import {deleteJobs, applyJob} from '../../../api'
+import {deleteJobs, applyJob, logsApi} from '../../../api'
 
 import {
   Table,
@@ -219,7 +219,7 @@ const EnhancedTableToolbar = (props) => {
           {
             toApply ? 
             <Tooltip title="Apply">
-              <IconButton aria-label="delete">
+              <IconButton aria-label="apply">
                 <CheckCircleOutlineIcon onClick={() => candidateApplyHandler()} />
               </IconButton>
             </Tooltip>
@@ -308,19 +308,20 @@ export default function EnhancedTable({filterData,setFilterData, jobData, toAppl
     })
   }
 
-  const candidateApplyHandler = async () => {
-      axios.post(applyJob, {
-        candidate: currentCandidate,
-        jobIds: selected
-      }, {withCredentials: true})
-      .then(data => {
-        toast.success('Jobs assigned successfully!')
+  const candidateApplyHandler = () => {
+
+    const applyJobRequest = axios.post(applyJob, {candidate: currentCandidate, jobIds: selected}, {withCredentials: true})
+    const logRequest = axios.post(logsApi, {candidate: currentCandidate, jobIds: selected, status: 'Shortlisted'}, {withCredentials: true})
+
+    axios.all([applyJobRequest, logRequest])
+    .then(axios.spread((...response) => {
+      toast.success('Jobs assigned successfully!')
         setSelected([])
         history.goBack()
-      })
-      .catch(err => {
-        toast.error(`Error: ${err.message}`)
-      })
+    }))
+    .catch(err => {
+      toast.error(`Error: ${err.message}`)
+    })
 	}
 
 

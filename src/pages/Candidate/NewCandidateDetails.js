@@ -3,7 +3,7 @@ import { Delete, PlaylistAdd, Edit } from '@material-ui/icons'
 import axios from 'axios'
 import { get } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { candidateEndpoint } from '../../api'
 import Controls from '../../components/Controls'
@@ -39,12 +39,13 @@ import { stages } from '../../utils/sharedVariables'
 
 import { toast } from '../../components/Toast'
 import { v4 as uuid } from 'uuid'
+import Logs from './components/Logs'
 
 
 function CandidateDetails({ match }) {
 	const id = match.params.id
 	const history = useHistory()
-	const tabLabels = ['Pipeline', 'Applied Jobs', 'Candidate Details']
+	const tabLabels = ['Pipeline', 'Applied Jobs', 'Candidate Details', 'Logs']
 	const tabIndex = useRecoilValue(candidateTab)
 	const [checked, setChecked] = useRecoilState(candidateCheckedAtom)
 	const [isModalOpen, setIsModalOpen] = useState(false)
@@ -165,6 +166,9 @@ function CandidateDetails({ match }) {
 
 			case 2:
 				return <NewCandidateInfo data={candidate} />
+
+			case 3:
+				return <Logs data={candidate} match={match} />
 			default:
 				break
 		}

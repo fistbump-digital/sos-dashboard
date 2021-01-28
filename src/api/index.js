@@ -44,4 +44,6 @@ export const statsEndpoint = `${API_URI}/stats`
 
 export const updateCandidateStatus = `${API_URI}/updatecandidatestatus`
 
+export const logsApi = `${API_URI}/logs`
+
 // export const getPublicJobs = `${API_URI}/public-jobs`

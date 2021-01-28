@@ -36,13 +36,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import NewJobInfo from './components/NewJobInfo'
 import AppliedCandidatesTable from './components/AppliedCandidatesTable'
+import Logs from './components/Logs'
 
 
 function JobDetails({ match }) {
 	const history = useHistory()
 	const id = match.params.id
 	const jobTabIndex = useRecoilValue(jobTab)
-	const labels = ['PipeLine', 'Applied Candidates', 'Job Details']
+	const labels = ['PipeLine', 'Applied Candidates', 'Job Details', 'Logs']
 	const [job, setJob] = useRecoilState(singlejobAtom)
 	const jobFullData = useRecoilValue(jobAtom)
 	const currentUser = useRecoilValue(currentUserAtom)
@@ -184,6 +185,8 @@ function JobDetails({ match }) {
 			case 2:
 				// return <JobInfo job={selectedJob} />
 				return <NewJobInfo data={selectedJob} />
+
+			case 3: return <Logs data={job} match={match} />
 
 			default:
 				break

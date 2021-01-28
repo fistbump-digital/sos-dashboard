@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
 import {Link} from 'react-router-dom'
-import { candidateEndpoint, statusEndpoint } from '../../../api'
+import { candidateEndpoint, statusEndpoint, logsApi } from '../../../api'
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, IconButton, Tooltip, Select, MenuItem, FormControl, InputLabel} from '@material-ui/core'
 import {formatDate, renderWithLoader, titleGenerator} from '../../../utils/helperFunctions'
 import { toast } from '../../../components/Toast'
@@ -39,8 +39,12 @@ const AppliedJobsTable = ({match}) => {
                         rowKey: i,
                         loading: true
                 })
-                axios.patch(`${statusEndpoint}/${id}`, {newCandidateStatusValue, row, data}, { withCredentials: true })
-                .then(data => {
+
+                const statusRequest = axios.patch(`${statusEndpoint}/${id}`, {newCandidateStatusValue, row, data}, {withCredentials: true})
+                const logRequest = axios.post(logsApi, {candidate: data, jobIds: [row.code], status: newCandidateStatusValue}, {withCredentials: true})
+
+                axios.all([statusRequest, logRequest])
+                .then(axios.spread((...response) => {
                         toast.success(data.data)
                         setIsEdit(false)
                         axios.get(`${candidateEndpoint}/${id}`, {withCredentials: true})
@@ -49,7 +53,7 @@ const AppliedJobsTable = ({match}) => {
                                 console.log(data)
                                 })
                         .catch(err => {console.log(err)})
-                })
+                }))
                 .catch(err => {
                         toast.error(`Error: ${err.message}`)
                 })
